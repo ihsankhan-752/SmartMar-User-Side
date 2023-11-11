@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "660262698395",
+    "project_id": "smart-mart-4e0cb",
+    "storage_bucket": "smart-mart-4e0cb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:660262698395:android:8fb05155512e8f2990f53e",
+        "android_client_info": {
+          "package_name": "com.iktechsol.smart_mart_user_side"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVaKPgoOHss_-Th_CSw_qJIYX-PCb0kq0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

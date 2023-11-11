@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">
+  <g id="cart_ico" data-name="cart ico" transform="translate(-894 -2305)">
+    <g id="cart_ico-2" data-name="cart ico" transform="translate(894 2305)">
+      <path id="Path_23" data-name="Path 23" d="M48.51,493c-.446-2.855-2.009-4.484-3.868-4.484s-3.422,1.629-3.868,4.484H37.643l1,9.516h12l1-9.516Zm-7.079,0c.434-1.9,1.7-3.487,3.211-3.487s2.777,1.584,3.211,3.487Z" transform="translate(-37.643 -488.512)" fill="#1d1d1b"/>
+    </g>
+    <path id="Color_Overlay" data-name="Color Overlay" d="M1,14,0,4.484H3.132C3.578,1.629,5.142,0,7,0s3.422,1.629,3.867,4.484H14L13,14ZM3.789,4.484h6.422C9.777,2.58,8.51,1,7,1S4.223,2.58,3.789,4.484Z" transform="translate(894 2305)" fill="#fa4248"/>
+  </g>
+</svg>
