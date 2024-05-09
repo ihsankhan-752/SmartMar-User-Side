@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../utils/functions/functions.dart';
 import '../../../utils/styles/colors.dart';
 import '../../../utils/styles/text_styles.dart';
-import '../../auth/sign_in_screen.dart';
+import '../../auth/login_screen.dart';
 
 class ContinueButton extends StatelessWidget {
   const ContinueButton({Key? key}) : super(key: key);

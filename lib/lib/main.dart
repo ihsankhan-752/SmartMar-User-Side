@@ -7,8 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:smart_mart_user_side/lib/controllers/loading_controller.dart';
 import 'package:smart_mart_user_side/lib/controllers/user_controller.dart';
 import 'package:smart_mart_user_side/lib/utils/services/stripe_services.dart';
-import 'package:smart_mart_user_side/lib/views/bottom_nav_bar/custom_bottom_navigation_bar.dart';
-import 'package:smart_mart_user_side/lib/views/splash/onboarding_one.dart';
 import 'package:smart_mart_user_side/lib/views/splash/splash_screen.dart';
 
 import 'controllers/cart_controller.dart';
@@ -46,13 +44,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        // initialRoute: '/main_splash',
-        routes: {
-          splash_screen.routeName: (_) => splash_screen(),
-          OnBoardingOne.routeName: (_) => OnBoardingOne(),
-          CustomBottomNavigation.routeName: (_) => CustomBottomNavigation(),
-        },
-        home: splash_screen(),
+
+        home: SplashScreen(),
         // home: HomeScreen(),
         builder: EasyLoading.init(),
       ),

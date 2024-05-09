@@ -10,12 +10,11 @@ import 'package:smart_mart_user_side/lib/services/storage_services.dart';
 import '../controllers/loading_controller.dart';
 import '../models/user_model.dart';
 import '../utils/functions/functions.dart';
-import '../views/auth/sign_in_screen.dart';
+import '../views/auth/login_screen.dart';
 import '../views/bottom_nav_bar/custom_bottom_navigation_bar.dart';
 
 class AuthServices {
-  Future<String> signUp(
-      {BuildContext? context, String? email, String? password, String? username, File? selectedImage}) async {
+  Future<String> signUp({BuildContext? context, String? email, String? password, String? username, File? selectedImage}) async {
     String response = "";
     try {
       var _auth = FirebaseAuth.instance;
@@ -28,10 +27,7 @@ class AuthServices {
         image: image,
         isSuppler: false,
       );
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .set(userModel.toMap());
+      await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).set(userModel.toMap());
       response = 'success';
       navigateToPageWithPush(context, CustomBottomNavigation());
     } on FirebaseException catch (e) {

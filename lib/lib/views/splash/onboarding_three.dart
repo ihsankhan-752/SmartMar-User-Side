@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_mart_user_side/lib/custom_widgets/buttons.dart';
 import 'package:smart_mart_user_side/lib/utils/functions/functions.dart';
 import 'package:smart_mart_user_side/lib/utils/styles/colors.dart';
-import 'package:smart_mart_user_side/lib/views/auth/sign_in_screen.dart';
+
+import '../auth/login_screen.dart';
 
 class OnBoardingThree extends StatelessWidget {
   const OnBoardingThree({Key? key}) : super(key: key);

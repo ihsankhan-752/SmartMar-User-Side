@@ -42,7 +42,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.mainColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -55,7 +54,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               style: GoogleFonts.poppins(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: AppColors.primaryWhite,
+                color: AppColors.grey,
               ),
             ),
             SizedBox(height: 10),
@@ -68,8 +67,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ),
             SizedBox(height: 20),
             AuthTextInput(
+              labelText: "E-Mail",
               controller: emailController,
-              hintText: "Email",
+              hintText: "test@gmail.com",
             ),
             SizedBox(height: 20),
             isLoading

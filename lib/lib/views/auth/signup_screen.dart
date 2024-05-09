@@ -3,15 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:smart_mart_user_side/lib/views/auth/sign_in_screen.dart';
 
 import '../../custom_widgets/buttons.dart';
 import '../../custom_widgets/custom_msg.dart';
 import '../../custom_widgets/custom_text_fields.dart';
-import '../../custom_widgets/logo_widget.dart';
 import '../../services/auth_services.dart';
 import '../../utils/functions/functions.dart';
 import '../../utils/styles/colors.dart';
+import 'login_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -69,7 +68,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.mainColor,
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -80,25 +78,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 100),
-                LogoWidget(),
-                SizedBox(height: 20),
+                SizedBox(height: 60),
                 Text(
                   "Create New Account",
                   style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primaryWhite,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  "Look like you don't have an account",
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
                     color: AppColors.grey,
                   ),
                 ),
+                SizedBox(height: 10),
                 SizedBox(height: 30),
                 Stack(
                   clipBehavior: Clip.none,
@@ -107,7 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ? CircleAvatar(
                             radius: 45,
                             backgroundColor: AppColors.primaryColor,
-                            child: Icon(Icons.person, size: 45),
+                            child: Icon(Icons.person, size: 45, color: AppColors.primaryWhite),
                           )
                         : CircleAvatar(
                             radius: 45,
@@ -133,25 +122,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   return SimpleDialog(
                                     children: [
                                       SimpleDialogOption(
-                                          onPressed: () async {
-                                            Navigator.of(context).pop();
-                                            await uploadImage(ImageSource.gallery);
-                                          },
-                                          child: Text("Gallery")),
+                                        onPressed: () async {
+                                          Navigator.of(context).pop();
+                                          await uploadImage(ImageSource.gallery);
+                                        },
+                                        child: Text("Gallery"),
+                                      ),
                                       Divider(),
                                       SimpleDialogOption(
-                                          onPressed: () async {
-                                            Navigator.of(context).pop();
+                                        onPressed: () async {
+                                          Navigator.of(context).pop();
 
-                                            await uploadImage(ImageSource.camera);
-                                          },
-                                          child: Text("Camera")),
+                                          await uploadImage(ImageSource.camera);
+                                        },
+                                        child: Text("Camera"),
+                                      ),
                                       Divider(),
                                       SimpleDialogOption(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text("Cancel")),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text("Cancel"),
+                                      ),
                                     ],
                                   );
                                 });
@@ -164,19 +156,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 SizedBox(height: 20),
                 AuthTextInput(
+                  labelText: 'username',
                   controller: usernameController,
-                  hintText: "username",
+                  hintText: "test user",
                 ),
                 SizedBox(height: 15),
                 AuthTextInput(
+                  labelText: 'E-Mail',
                   controller: emailController,
-                  hintText: "Email",
+                  hintText: "test@gmail.com",
                 ),
                 SizedBox(height: 15),
                 AuthTextInput(
+                  labelText: 'Address',
+                  controller: emailController,
+                  hintText: "Kpk, Pakistan",
+                ),
+                SizedBox(height: 15),
+                AuthTextInput(
+                  labelText: 'Contact',
+                  controller: emailController,
+                  hintText: "+92 1231231",
+                ),
+                SizedBox(height: 15),
+                AuthTextInput(
+                  labelText: 'Password',
                   isTextSecure: true,
                   controller: passwordController,
-                  hintText: "Password",
+                  hintText: "******",
                   isSuffixReq: true,
                   suffixIcon: Icon(Icons.visibility_off),
                 ),
@@ -198,8 +205,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       Text(
                         "Already have an Account? ",
                         style: TextStyle(
-                          fontSize: 16,
-                          color: AppColors.primaryWhite,
+                          fontSize: 14,
+                          color: AppColors.grey,
                         ),
                       ),
                       Text(
@@ -207,6 +214,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           color: AppColors.primaryColor,
+                          fontWeight: FontWeight.bold,
                         ),
                       )
                     ],

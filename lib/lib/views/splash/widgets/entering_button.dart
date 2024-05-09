@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../utils/functions/functions.dart';
 import '../../../utils/styles/colors.dart';
-import '../../auth/sign_in_screen.dart';
+import '../../auth/login_screen.dart';
 import '../../auth/signup_screen.dart';
 import 'authentication_button.dart';
 

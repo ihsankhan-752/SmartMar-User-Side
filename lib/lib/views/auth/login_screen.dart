@@ -27,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final loadingController = Provider.of<LoadingController>(context);
     return Scaffold(
-      backgroundColor: AppColors.mainColor,
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -46,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: GoogleFonts.poppins(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.primaryWhite,
+                    color: AppColors.grey,
                   ),
                 ),
                 SizedBox(height: 10),
@@ -59,14 +58,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 20),
                 AuthTextInput(
+                  labelText: "E-Mail",
                   controller: emailController,
-                  hintText: "Email",
+                  hintText: "test@gmail.com",
                 ),
                 SizedBox(height: 20),
                 AuthTextInput(
+                  labelText: "Password",
                   isTextSecure: true,
                   controller: passwordController,
-                  hintText: "Password",
+                  hintText: "******",
                   isSuffixReq: true,
                   suffixIcon: Icon(
                     Icons.visibility_off,
@@ -85,6 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         fontSize: 16,
                         color: AppColors.primaryColor,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
@@ -112,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         "Don't have an Account? ",
                         style: TextStyle(
                           fontSize: 16,
-                          color: AppColors.primaryWhite,
+                          color: AppColors.grey,
                         ),
                       ),
                       Text(
@@ -120,6 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(
                           fontSize: 16,
                           color: AppColors.primaryColor,
+                          fontWeight: FontWeight.bold,
                         ),
                       )
                     ],
