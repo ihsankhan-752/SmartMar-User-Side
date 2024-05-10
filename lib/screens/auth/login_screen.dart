@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_mart_user_side/controllers/app_text_controller.dart';
 import 'package:smart_mart_user_side/screens/auth/signup_screen.dart';
+import 'package:smart_mart_user_side/screens/auth/widgets/auth_footer.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/navigations.dart';
@@ -20,8 +22,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  bool _isSecureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -59,19 +60,25 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: 20),
                 AuthTextInput(
                   labelText: "E-Mail",
-                  controller: emailController,
+                  controller: AppTextController.emailController,
                   hintText: "test@gmail.com",
                 ),
                 SizedBox(height: 20),
                 AuthTextInput(
                   labelText: "Password",
-                  isTextSecure: true,
-                  controller: passwordController,
+                  isTextSecure: _isSecureText,
+                  controller: AppTextController.passwordController,
                   hintText: "******",
-                  isSuffixReq: true,
-                  suffixIcon: Icon(
-                    Icons.visibility_off,
-                    color: AppColors.grey,
+                  suffixIcon: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isSecureText = !_isSecureText;
+                      });
+                    },
+                    child: Icon(
+                      _isSecureText ? Icons.visibility_off : Icons.visibility,
+                      color: AppColors.grey,
+                    ),
                   ),
                 ),
                 SizedBox(height: 10),
@@ -93,41 +100,27 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: 30),
                 loadingController.isLoading
-                    ? Center(child: CircularProgressIndicator(color: AppColors.orange))
+                    ? Center(child: CircularProgressIndicator())
                     : PrimaryButton(
-                        onTap: () async {
-                          await AuthServices().signIn(
+                        onTap: () {
+                          AuthServices().signIn(
                             context,
-                            emailController.text,
-                            passwordController.text,
-                          );
+                            AppTextController.emailController.text,
+                            AppTextController.passwordController.text,
+                          ).whenComplete(() {
+                            AppTextController().clear();
+                          });
                         },
                         title: "Sign In",
                       ),
                 SizedBox(height: 20),
-                InkWell(
-                  onTap: () => navigateToPageWithPush(context, SignUpScreen()),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Don't have an Account? ",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColors.grey,
-                        ),
-                      ),
-                      Text(
-                        "Sign Up",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColors.primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    ],
-                  ),
-                )
+                AuthFooter(
+                  onPressed: () {
+                    navigateToPageWithPush(context, SignUpScreen());
+                  },
+                  title: "Don't have an Account? ",
+                  screenName: "Sign Up",
+                ),
               ],
             ),
           ),

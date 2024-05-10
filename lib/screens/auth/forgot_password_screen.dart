@@ -1,10 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:smart_mart_user_side/controllers/app_text_controller.dart';
+import 'package:smart_mart_user_side/controllers/loading_controller.dart';
+import 'package:smart_mart_user_side/services/auth_services.dart';
 
 import '../../constants/colors.dart';
 import '../../widgets/buttons.dart';
-import '../../widgets/custom_msg.dart';
 import '../../widgets/custom_text_fields.dart';
 import '../../widgets/logo_widget.dart';
 
@@ -16,29 +18,6 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  bool isLoading = false;
-
-  TextEditingController emailController = TextEditingController();
-  void resetPassword() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-      await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text);
-      setState(() {
-        isLoading = false;
-        emailController.clear();
-      });
-      Navigator.pop(context);
-      showCustomMsg(context: context, msg: "Reset your Password and Login Again");
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      showCustomMsg(context: context, msg: e.message!);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,22 +47,24 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             SizedBox(height: 20),
             AuthTextInput(
               labelText: "E-Mail",
-              controller: emailController,
+              controller: AppTextController.emailController,
               hintText: "test@gmail.com",
             ),
             SizedBox(height: 20),
-            isLoading
-                ? Center(child: CircularProgressIndicator(color: AppColors.orange))
-                : PrimaryButton(
-                    onTap: () {
-                      if (emailController.text.isEmpty) {
-                        showCustomMsg(context: context, msg: "Email must be filled");
-                      } else {
-                        resetPassword();
-                      }
-                    },
-                    title: "Reset",
-                  ),
+            Consumer<LoadingController>(builder: (context, loadingController, child) {
+              return loadingController.isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : PrimaryButton(
+                      onTap: () {
+                        AuthServices().resetPassword(context, AppTextController.emailController.text).whenComplete(() {
+                          AppTextController().clear();
+                        });
+                      },
+                      title: "Reset",
+                    );
+            }),
           ],
         ),
       ),

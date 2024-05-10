@@ -39,19 +39,11 @@ class CustomTextFields extends StatelessWidget {
 class AuthTextInput extends StatelessWidget {
   final TextEditingController? controller;
   final String? hintText, labelText;
-  final bool isSuffixReq;
   final bool isTextSecure;
   final TextInputType? inputType;
   final Widget? suffixIcon;
   const AuthTextInput(
-      {Key? key,
-      this.controller,
-      this.hintText,
-      this.inputType,
-      this.isSuffixReq = false,
-      this.suffixIcon,
-      this.isTextSecure = false,
-      this.labelText})
+      {Key? key, this.controller, this.hintText, this.inputType, this.suffixIcon, this.isTextSecure = false, this.labelText})
       : super(key: key);
 
   @override
@@ -59,6 +51,7 @@ class AuthTextInput extends StatelessWidget {
     return TextField(
       keyboardType: inputType,
       controller: controller,
+      obscureText: isTextSecure ?? false,
       decoration: InputDecoration(
         isDense: true,
         counter: SizedBox.shrink(),
@@ -83,7 +76,7 @@ class AuthTextInput extends StatelessWidget {
         ),
         hintText: hintText,
         hintStyle: GoogleFonts.nunito(fontSize: 12, color: Color(0xff2b2b2b).withOpacity(0.4)),
-        suffixIcon: suffixIcon,
+        suffixIcon: suffixIcon ?? SizedBox(),
       ),
     );
   }

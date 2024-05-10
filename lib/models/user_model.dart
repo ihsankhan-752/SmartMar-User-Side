@@ -5,12 +5,11 @@ class UserModel {
   String? username;
   String? email;
   String? address;
-  String? phone;
+  int? phone;
   String? image;
   List? cart;
   List? wishlist;
   List? storeFollowers;
-  bool? isSuppler;
 
   UserModel({
     this.uid,
@@ -21,7 +20,6 @@ class UserModel {
     this.image,
     this.cart,
     this.wishlist,
-    this.isSuppler,
     this.storeFollowers,
   });
 
@@ -35,7 +33,6 @@ class UserModel {
         image: snap['image'],
         cart: snap['cart'],
         wishlist: snap['wishlist'],
-        isSuppler: snap['isSupplier'],
         storeFollowers: snap['storeFollowers']);
   }
   Map<String, dynamic> toMap() {
@@ -43,9 +40,9 @@ class UserModel {
       "uid": uid,
       "userName": username,
       "email": email,
-      "address": "",
-      "phone": "",
-      "image": image,
+      "address": address,
+      "phone": phone,
+      "image": "",
       "cart": [],
       "wishlist": [],
       "storeFollowers": [],
