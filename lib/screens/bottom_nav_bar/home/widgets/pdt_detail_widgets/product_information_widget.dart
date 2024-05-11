@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_mart_user_side/models/pdt_model.dart';
 
 import '../../../../../constants/colors.dart';
-import '../../../../../services/firestore_services.dart';
 
 class ProductInformationWidget extends StatefulWidget {
   final ProductModel productModel;
@@ -18,63 +15,49 @@ class ProductInformationWidget extends StatefulWidget {
 class _ProductInformationWidgetState extends State<ProductInformationWidget> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 20),
-        Center(
-          child: Text(
-            widget.productModel.pdtName!,
-            style: GoogleFonts.acme(
-              textStyle: TextStyle(
-                fontSize: 22,
-                color: AppColors.primaryColor,
-                letterSpacing: 1.0,
-                fontWeight: FontWeight.bold,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20),
+          Row(
+            children: [
+              Text(
+                widget.productModel.pdtName!,
+                style: GoogleFonts.acme(
+                  textStyle: TextStyle(
+                    fontSize: 22,
+                    letterSpacing: 1.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
+              Spacer(),
+              Icon(Icons.grade, size: 25, color: AppColors.amber),
+              SizedBox(width: 05),
+              Text(
+                "4.5/5 (45 reviews)",
+                style: TextStyle(
+                  fontSize: 13,
+                  color: AppColors.primaryBlack,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 15),
+          Text(
+            "${widget.productModel.pdtDescription}",
+            style: TextStyle(
+              color: AppColors.primaryBlack.withOpacity(0.6),
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ),
-        SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "${widget.productModel.pdtPrice!.toStringAsFixed(2)} USD",
-              style: TextStyle(
-                fontSize: 16,
-                color: AppColors.primaryWhite,
-              ),
-            ),
-            StreamBuilder<DocumentSnapshot>(
-                stream: FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-                  return IconButton(
-                    icon: data['wishlist'].contains(widget.productModel.pdtId)
-                        ? Icon(Icons.favorite, color: Colors.red[900])
-                        : Icon(Icons.favorite_border, color: Colors.red[900]),
-                    onPressed: () async {
-                      await FireStoreServices().addItemToWishlist(context, widget.productModel.pdtId!);
-                      setState(() {});
-                    },
-                  );
-                }),
-          ],
-        ),
-        SizedBox(height: 10),
-        Text(
-          "${widget.productModel.quantity} Pieces in Stock",
-          style: TextStyle(
-            color: AppColors.primaryWhite,
-            fontSize: 16,
-          ),
-        ),
-        SizedBox(height: 10),
-      ],
+          SizedBox(height: 20),
+        ],
+      ),
     );
   }
 }

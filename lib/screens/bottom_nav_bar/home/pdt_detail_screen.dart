@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:smart_mart_user_side/models/pdt_model.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/pdt_detail_widgets/bottom_portion.dart';
-import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/pdt_detail_widgets/item_desc_widget_pdt_detail.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/pdt_detail_widgets/product_information_widget.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/text_styles.dart';
+import '../../../services/firestore_services.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final ProductModel productModel;
@@ -41,47 +41,79 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryBlack,
       appBar: AppBar(
-        backgroundColor: AppColors.mainColor,
         automaticallyImplyLeading: true,
         centerTitle: true,
-        title: Text(widget.productModel.pdtName!, style: AppTextStyles.APPBAR_HEADING_STYLE),
+        title: Text("Details", style: AppTextStyles.APPBAR_HEADING_STYLE.copyWith(color: AppColors.primaryBlack)),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.35,
-                child: Swiper(
-                  pagination: SwiperPagination(
-                    builder: SwiperPagination.fraction,
-                  ),
-                  itemCount: widget.productModel.pdtImages!.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.only(right: 20, top: 15),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: Image.network(widget.productModel.pdtImages![index], fit: BoxFit.fill),
-                      ),
-                    );
-                  },
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.4,
+              child: Swiper(
+                pagination: SwiperPagination(
+                  builder: SwiperPagination.fraction,
                 ),
+                itemCount: widget.productModel.pdtImages!.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(widget.productModel.pdtImages![index]),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 20),
+                        child: Card(
+                          color: AppColors.primaryWhite,
+                          elevation: 3,
+                          child: SizedBox(
+                            height: 50,
+                            width: 50,
+                            child: StreamBuilder<DocumentSnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return Center(child: CircularProgressIndicator());
+                                  }
+                                  Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                                  return IconButton(
+                                    icon: data['wishlist'].contains(widget.productModel.pdtId)
+                                        ? Icon(Icons.favorite)
+                                        : Icon(Icons.favorite_border),
+                                    onPressed: () async {
+                                      await FireStoreServices().addItemToWishlist(context, widget.productModel.pdtId!);
+                                      setState(() {});
+                                    },
+                                  );
+                                }),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
-              ProductInformationWidget(productModel: widget.productModel),
-              Divider(color: AppColors.primaryColor, thickness: 1),
-              ItemDescWidgetProductDetail(productModel: widget.productModel),
-              // Divider(color: AppColors.primaryColor, thickness: 1),
-              // ProductReviewPortion(productInfo: widget.productInfo),
-            ],
-          ),
+            ),
+            SizedBox(height: 20),
+            Card(
+              elevation: 0.2,
+              color: AppColors.primaryWhite,
+              child: Column(
+                children: [
+                  ProductInformationWidget(productModel: widget.productModel),
+                ],
+              ),
+            )
+          ],
         ),
       ),
       bottomSheet: BottomPortion(productModel: widget.productModel),
