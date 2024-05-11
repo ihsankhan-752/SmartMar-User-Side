@@ -51,7 +51,7 @@ class AuthTextInput extends StatelessWidget {
     return TextField(
       keyboardType: inputType,
       controller: controller,
-      obscureText: isTextSecure ?? false,
+      obscureText: isTextSecure,
       decoration: InputDecoration(
         isDense: true,
         counter: SizedBox.shrink(),
@@ -77,6 +77,38 @@ class AuthTextInput extends StatelessWidget {
         hintText: hintText,
         hintStyle: GoogleFonts.nunito(fontSize: 12, color: Color(0xff2b2b2b).withOpacity(0.4)),
         suffixIcon: suffixIcon ?? SizedBox(),
+      ),
+    );
+  }
+}
+
+class SearchTextInput extends StatelessWidget {
+  final TextEditingController? controller;
+  final String? hintText;
+  const SearchTextInput({Key? key, this.controller, this.hintText}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        isDense: true,
+        counter: SizedBox.shrink(),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: Colors.black.withOpacity(0.5),
+          ),
+        ),
+        prefixIcon: Icon(Icons.search, color: AppColors.grey, size: 22),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(9),
+          borderSide: BorderSide(
+            color: Colors.black.withOpacity(0.5),
+          ),
+        ),
+        hintText: hintText,
+        hintStyle: GoogleFonts.nunito(fontSize: 14.5, color: Color(0xff2b2b2b).withOpacity(0.8)),
       ),
     );
   }

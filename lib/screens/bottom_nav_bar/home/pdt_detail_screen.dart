@@ -2,18 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
+import 'package:smart_mart_user_side/models/pdt_model.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/pdt_detail_widgets/bottom_portion.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/pdt_detail_widgets/item_desc_widget_pdt_detail.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/pdt_detail_widgets/product_information_widget.dart';
-import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/pdt_detail_widgets/product_review_portion.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/text_styles.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  final dynamic productInfo;
+  final ProductModel productModel;
 
-  const ProductDetailScreen({this.productInfo});
+  const ProductDetailScreen({required this.productModel});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -40,15 +40,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<dynamic> imageList = widget.productInfo['productImages'];
-
     return Scaffold(
       backgroundColor: AppColors.primaryBlack,
       appBar: AppBar(
         backgroundColor: AppColors.mainColor,
         automaticallyImplyLeading: true,
         centerTitle: true,
-        title: Text(widget.productInfo['pdtName']!, style: AppTextStyles.APPBAR_HEADING_STYLE),
+        title: Text(widget.productModel.pdtName!, style: AppTextStyles.APPBAR_HEADING_STYLE),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -62,28 +60,31 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   pagination: SwiperPagination(
                     builder: SwiperPagination.fraction,
                   ),
-                  itemCount: imageList.length,
+                  itemCount: widget.productModel.pdtImages!.length,
                   itemBuilder: (context, index) {
                     return Container(
+                      margin: EdgeInsets.only(right: 20, top: 15),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20), child: Image.network(imageList[index], fit: BoxFit.fill)),
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.network(widget.productModel.pdtImages![index], fit: BoxFit.fill),
+                      ),
                     );
                   },
                 ),
               ),
-              ProductInformationWidget(productInfo: widget.productInfo),
+              ProductInformationWidget(productModel: widget.productModel),
               Divider(color: AppColors.primaryColor, thickness: 1),
-              ItemDescWidgetProductDetail(data: widget.productInfo),
-              Divider(color: AppColors.primaryColor, thickness: 1),
-              ProductReviewPortion(productInfo: widget.productInfo),
+              ItemDescWidgetProductDetail(productModel: widget.productModel),
+              // Divider(color: AppColors.primaryColor, thickness: 1),
+              // ProductReviewPortion(productInfo: widget.productInfo),
             ],
           ),
         ),
       ),
-      bottomSheet: BottomPortion(productInfo: widget.productInfo),
+      bottomSheet: BottomPortion(productModel: widget.productModel),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_mart_user_side/models/pdt_model.dart';
 
 import '../widgets/custom_msg.dart';
 
@@ -40,14 +41,14 @@ class FireStoreServices {
     }
   }
 
-  Future myCart({BuildContext? context, dynamic productInfo}) async {
+  Future myCart({BuildContext? context, ProductModel? productModel}) async {
     try {
-      DocumentSnapshot pdtSnap = await FirebaseFirestore.instance.collection("products").doc(productInfo['pdtId']).get();
-      await FirebaseFirestore.instance.collection("mycart").doc(productInfo['pdtId']).set({
+      DocumentSnapshot pdtSnap = await FirebaseFirestore.instance.collection("products").doc(productModel!.pdtId).get();
+      await FirebaseFirestore.instance.collection("mycart").doc(productModel.pdtId).set({
         "userId": FirebaseAuth.instance.currentUser!.uid,
-        "pdtId": productInfo['pdtId'],
+        "pdtId": productModel.pdtId,
         "quantity": 1,
-        "price": productInfo['price'],
+        "price": productModel.pdtPrice,
         "supplierId": pdtSnap['supplierId'],
       });
     } catch (e) {

@@ -2,13 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_mart_user_side/models/pdt_model.dart';
 
 import '../../../../../constants/colors.dart';
 import '../../../../../services/firestore_services.dart';
 
 class ProductInformationWidget extends StatefulWidget {
-  final dynamic productInfo;
-  const ProductInformationWidget({Key? key, this.productInfo}) : super(key: key);
+  final ProductModel productModel;
+  const ProductInformationWidget({Key? key, required this.productModel}) : super(key: key);
 
   @override
   State<ProductInformationWidget> createState() => _ProductInformationWidgetState();
@@ -23,7 +24,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget> {
         SizedBox(height: 20),
         Center(
           child: Text(
-            widget.productInfo['pdtName']!,
+            widget.productModel.pdtName!,
             style: GoogleFonts.acme(
               textStyle: TextStyle(
                 fontSize: 22,
@@ -39,7 +40,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "${widget.productInfo['price']!.toStringAsFixed(2)} USD",
+              "${widget.productModel.pdtPrice!.toStringAsFixed(2)} USD",
               style: TextStyle(
                 fontSize: 16,
                 color: AppColors.primaryWhite,
@@ -53,11 +54,11 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget> {
                   }
                   Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
                   return IconButton(
-                    icon: data['wishlist'].contains(widget.productInfo['pdtId'])
+                    icon: data['wishlist'].contains(widget.productModel.pdtId)
                         ? Icon(Icons.favorite, color: Colors.red[900])
                         : Icon(Icons.favorite_border, color: Colors.red[900]),
                     onPressed: () async {
-                      await FireStoreServices().addItemToWishlist(context, widget.productInfo['pdtId']);
+                      await FireStoreServices().addItemToWishlist(context, widget.productModel.pdtId!);
                       setState(() {});
                     },
                   );
@@ -66,7 +67,7 @@ class _ProductInformationWidgetState extends State<ProductInformationWidget> {
         ),
         SizedBox(height: 10),
         Text(
-          "${widget.productInfo['quantity']} Pieces in Stock",
+          "${widget.productModel.quantity} Pieces in Stock",
           style: TextStyle(
             color: AppColors.primaryWhite,
             fontSize: 16,

@@ -2,6 +2,7 @@ import 'package:badges/badges.dart' as badge;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_mart_user_side/models/pdt_model.dart';
 
 import '../../../../../constants/colors.dart';
 import '../../../../../constants/navigations.dart';
@@ -11,8 +12,8 @@ import '../../../../chat/chat_screen.dart';
 import '../../../cart/cart_screen.dart';
 
 class BottomPortion extends StatelessWidget {
-  final dynamic productInfo;
-  const BottomPortion({Key? key, this.productInfo}) : super(key: key);
+  final ProductModel productModel;
+  const BottomPortion({Key? key, required this.productModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +28,10 @@ class BottomPortion extends StatelessWidget {
             SizedBox(width: 10),
             InkWell(
                 onTap: () {
-                  navigateToPageWithPush(context, ChatScreen(supplierId: productInfo['supplierId']));
+                  navigateToPageWithPush(
+                    context,
+                    ChatScreen(supplierId: productModel.sellerId!),
+                  );
                 },
                 child: Icon(Icons.chat, color: AppColors.primaryWhite)),
             SizedBox(width: 20),
@@ -69,8 +73,8 @@ class BottomPortion extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.4,
               child: PrimaryButton(
                 onTap: () async {
-                  await FireStoreServices().addItemToCart(context, productInfo['pdtId']);
-                  await FireStoreServices().myCart(context: context, productInfo: productInfo);
+                  await FireStoreServices().addItemToCart(context, productModel.pdtId!);
+                  await FireStoreServices().myCart(context: context, productModel: productModel);
                 },
                 title: "Add To Cart",
               ),

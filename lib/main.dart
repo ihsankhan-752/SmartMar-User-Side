@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_mart_user_side/controllers/app_text_controller.dart';
 import 'package:smart_mart_user_side/controllers/image_controller.dart';
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AppTextController()),
         ChangeNotifierProvider(create: (_) => ImageController()),
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         home: SplashScreen(),
         builder: EasyLoading.init(),

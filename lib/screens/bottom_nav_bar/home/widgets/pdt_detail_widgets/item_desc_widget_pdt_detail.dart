@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:smart_mart_user_side/models/pdt_model.dart';
 
 import '../../../../../constants/text_styles.dart';
 
 class ItemDescWidgetProductDetail extends StatelessWidget {
-  final dynamic data;
-  const ItemDescWidgetProductDetail({Key? key, this.data}) : super(key: key);
+  final ProductModel productModel;
+  const ItemDescWidgetProductDetail({Key? key, required this.productModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class ItemDescWidgetProductDetail extends StatelessWidget {
         Text("Item Description", style: AppTextStyles.APPBAR_HEADING_STYLE),
         SizedBox(height: 10),
         Text(
-          data['pdtDescription']!,
+          productModel.pdtDescription!,
           style: TextStyle(
             fontSize: 16,
             color: Colors.grey,

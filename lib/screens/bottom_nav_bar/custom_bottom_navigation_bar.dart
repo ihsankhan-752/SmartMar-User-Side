@@ -57,55 +57,58 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
         return false;
       },
       child: Scaffold(
-        backgroundColor: AppColors.primaryBlack,
         body: Pages[_currentIndex],
         bottomNavigationBar: Container(
-          margin: EdgeInsets.symmetric(horizontal: 10),
           height: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: AppColors.mainColor,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              CustomWidgetSelection(
-                icon: FontAwesomeIcons.house,
-                iconColor: _currentIndex == 0 ? AppColors.primaryWhite : Colors.grey,
-                onPressed: () {
-                  setState(() {
-                    _currentIndex = 0;
-                  });
-                },
-              ),
-              CustomWidgetSelection(
-                iconColor: _currentIndex == 1 ? AppColors.primaryWhite : Colors.grey,
-                icon: Icons.favorite_border,
-                onPressed: () {
-                  setState(() {
-                    _currentIndex = 1;
-                  });
-                },
-              ),
-              CustomWidgetSelection(
-                icon: Icons.notifications_active_outlined,
-                iconColor: _currentIndex == 2 ? AppColors.primaryWhite : Colors.grey,
-                onPressed: () {
-                  setState(() {
-                    _currentIndex = 2;
-                  });
-                },
-              ),
-              CustomWidgetSelection(
-                iconColor: _currentIndex == 3 ? AppColors.primaryWhite : Colors.grey,
-                icon: Icons.person,
-                onPressed: () {
-                  setState(() {
-                    _currentIndex = 3;
-                  });
-                },
-              ),
-            ],
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.zero,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                CustomWidgetSelection(
+                  title: "Home",
+                  icon: FontAwesomeIcons.house,
+                  activeColor: _currentIndex == 0 ? AppColors.primaryColor : Colors.grey,
+                  onPressed: () {
+                    setState(() {
+                      _currentIndex = 0;
+                    });
+                  },
+                ),
+                CustomWidgetSelection(
+                  title: "Saved",
+                  activeColor: _currentIndex == 1 ? AppColors.primaryColor : Colors.grey,
+                  icon: Icons.favorite_border,
+                  onPressed: () {
+                    setState(() {
+                      _currentIndex = 1;
+                    });
+                  },
+                ),
+                CustomWidgetSelection(
+                  title: "Cart",
+                  icon: Icons.shopping_cart,
+                  activeColor: _currentIndex == 2 ? AppColors.primaryColor : Colors.grey,
+                  onPressed: () {
+                    setState(() {
+                      _currentIndex = 2;
+                    });
+                  },
+                ),
+                CustomWidgetSelection(
+                  title: "Account",
+                  activeColor: _currentIndex == 3 ? AppColors.primaryColor : Colors.grey,
+                  icon: Icons.person,
+                  onPressed: () {
+                    setState(() {
+                      _currentIndex = 3;
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -116,16 +119,25 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
 class CustomWidgetSelection extends StatelessWidget {
   final Function()? onPressed;
   final IconData? icon;
-  final Color? iconColor;
-  const CustomWidgetSelection({Key? key, this.onPressed, this.icon, this.iconColor}) : super(key: key);
+  final Color? activeColor;
+  final String? title;
+  const CustomWidgetSelection({Key? key, this.onPressed, this.icon, this.activeColor, this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onPressed,
-      child: Row(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: iconColor, size: 22),
+          Icon(icon, color: activeColor, size: 22),
+          Text(
+            title!,
+            style: TextStyle(
+              color: activeColor,
+              fontSize: 12,
+            ),
+          )
         ],
       ),
     );

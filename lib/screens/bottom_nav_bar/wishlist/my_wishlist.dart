@@ -116,7 +116,8 @@ class MyWishListScreen extends StatelessWidget {
                                                       });
                                                       await FireStoreServices().myCart(
                                                         context: context,
-                                                        productInfo: data,
+                                                        //todo here i will pass product Model
+                                                        // productInfo: data,
                                                       );
                                                       showCustomMsg(context: context, msg: "Item is Added to Cart Successfully!");
 

@@ -10,6 +10,7 @@ class AppColors {
   static Color primaryBlack = Colors.black;
   static Color lightGrey = Colors.grey.shade300;
   static Color amber = Colors.amber;
-  static Color primaryColor = Color(0xff648286);
+  static Color primaryColor = Color(0xff19C262);
   static Color mainColor = Color(0xff2b2b2b);
+  static Color bgColor = Color(0xffECF0F1);
 }

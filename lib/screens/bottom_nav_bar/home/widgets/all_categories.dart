@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/pdt_model.dart';
+import 'package:smart_mart_user_side/models/pdt_model.dart';
+import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/product_card.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
@@ -39,8 +40,9 @@ class ALlCategories extends StatelessWidget {
             itemCount: snapshot.data!.docs.length,
             crossAxisCount: 2,
             itemBuilder: (context, index) {
-              return ProductModel(
-                products: snapshot.data!.docs[index],
+              ProductModel productModel = ProductModel.fromMap(snapshot.data!.docs[index]);
+              return ProductCard(
+                productModel: productModel,
               );
             },
             staggeredTileBuilder: (context) => StaggeredTile.fit(1),
