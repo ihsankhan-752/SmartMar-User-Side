@@ -65,6 +65,7 @@ dependencies:
   intl: ^0.18.1
   timeago: any
   get: ^4.6.6
+  flutter_slidable: ^3.1.0
 
 dev_dependencies:
   flutter_test:

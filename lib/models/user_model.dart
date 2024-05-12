@@ -9,7 +9,6 @@ class UserModel {
   String? image;
   List? cart;
   List? wishlist;
-  List? storeFollowers;
 
   UserModel({
     this.uid,
@@ -20,20 +19,19 @@ class UserModel {
     this.image,
     this.cart,
     this.wishlist,
-    this.storeFollowers,
   });
 
   factory UserModel.fromDocument(DocumentSnapshot snap) {
     return UserModel(
-        uid: snap['uid'],
-        email: snap['email'],
-        username: snap['username'],
-        address: snap['address'],
-        phone: snap['phone'],
-        image: snap['image'],
-        cart: snap['cart'],
-        wishlist: snap['wishlist'],
-        storeFollowers: snap['storeFollowers']);
+      uid: snap['uid'],
+      email: snap['email'],
+      username: snap['userName'],
+      address: snap['address'],
+      phone: snap['phone'],
+      image: snap['image'],
+      cart: snap['cart'],
+      wishlist: snap['wishlist'],
+    );
   }
   Map<String, dynamic> toMap() {
     return {
@@ -45,8 +43,6 @@ class UserModel {
       "image": "",
       "cart": [],
       "wishlist": [],
-      "storeFollowers": [],
-      "isSupplier": false,
     };
   }
 }

@@ -8,7 +8,7 @@ class AppTextStyles {
     fontSize: 32,
     color: Colors.white,
   );
-  TextStyle H2 = GoogleFonts.patuaOne(
+  TextStyle H2 = TextStyle(
     fontSize: 32,
     color: Colors.black,
     fontWeight: FontWeight.bold,

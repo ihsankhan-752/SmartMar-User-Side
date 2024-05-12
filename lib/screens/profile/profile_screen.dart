@@ -55,14 +55,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     CircleAvatar(
                       backgroundColor: Colors.grey,
                       radius: 30,
-                      backgroundImage: NetworkImage(userController.userImage),
+                      backgroundImage: NetworkImage(userController.userModel!.image!),
                     ),
                     SizedBox(width: 20),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          userController.username,
+                          userController.userModel!.username!,
                           style: AppTextStyles.APPBAR_HEADING_STYLE.copyWith(
                             fontSize: 18,
                             color: AppColors.primaryWhite,
@@ -70,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                         Text(
-                          userController.email,
+                          userController.userModel!.email!,
                           style: TextStyle(
                             color: AppColors.grey,
                           ),
@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onPressed: () => navigateToPageWithPush(
                       context,
                       CartScreen(
-                        pdtIds: userController.cart,
+                        pdtIds: userController.userModel!.cart!,
                       )),
                   icon: FontAwesomeIcons.cartShopping,
                   title: "My Cart"),
