@@ -16,7 +16,6 @@ import '../../controllers/user_controller.dart';
 import '../../services/auth_services.dart';
 import '../address_screen/add_address_screen.dart';
 import '../bottom_nav_bar/cart/cart_screen.dart';
-import '../bottom_nav_bar/wishlist/my_wishlist.dart';
 import 'edit_profile_screen.dart';
 import 'order_history.dart';
 
@@ -87,15 +86,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onPressed: () => navigateToPageWithPush(context, OrderHistory()),
                   icon: FontAwesomeIcons.clockRotateLeft,
                   title: "Order History"),
-              ProfileListTileWidget(
-                  onPressed: () => navigateToPageWithPush(
-                      context,
-                      MyWishListScreen(
-                        wishlist: userController.wishlist,
-                        cartList: userController.cart,
-                      )),
-                  icon: FontAwesomeIcons.heart,
-                  title: "My Wishlist"),
+              // ProfileListTileWidget(
+              //     onPressed: () => navigateToPageWithPush(
+              //         context,
+              //         MyWishListScreen(
+              //           wishlist: userController.wishlist,
+              //           cartList: userController.cart,
+              //         )),
+              //     icon: FontAwesomeIcons.heart,
+              //     title: "My Wishlist"),
               ProfileListTileWidget(
                   onPressed: () => navigateToPageWithPush(
                       context,

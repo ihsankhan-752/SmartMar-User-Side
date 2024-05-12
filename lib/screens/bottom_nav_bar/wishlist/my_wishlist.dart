@@ -2,31 +2,32 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:stylish_dialog/stylish_dialog.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/navigations.dart';
 import '../../../constants/text_styles.dart';
+import '../../../controllers/user_controller.dart';
 import '../../../services/firestore_services.dart';
 import '../../../widgets/custom_msg.dart';
 import '../../profile/widgets/action_button.dart';
 import '../custom_bottom_navigation_bar.dart';
 
 class MyWishListScreen extends StatelessWidget {
-  final List<dynamic> wishlist;
-  final List<dynamic> cartList;
-  const MyWishListScreen({Key? key, required this.wishlist, required this.cartList}) : super(key: key);
+  const MyWishListScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final userController = Provider.of<UserController>(context);
+
     return Scaffold(
-      backgroundColor: AppColors.primaryBlack,
       appBar: AppBar(
-        backgroundColor: AppColors.mainColor,
         elevation: 0,
         centerTitle: true,
-        automaticallyImplyLeading: false,
-        title: Text("My Wishlist", style: AppTextStyles.APPBAR_HEADING_STYLE),
+        title: Text("My Wishlist", style: AppTextStyles.APPBAR_HEADING_STYLE.copyWith(color: AppColors.mainColor)),
       ),
       body: Column(
         children: [
@@ -36,10 +37,11 @@ class MyWishListScreen extends StatelessWidget {
               child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: ListView.builder(
-                    itemCount: wishlist.length,
+                    itemCount: userController.wishlist.length,
                     itemBuilder: (context, index) {
                       return StreamBuilder<DocumentSnapshot>(
-                          stream: FirebaseFirestore.instance.collection("products").doc(wishlist[index]).snapshots(),
+                          stream:
+                              FirebaseFirestore.instance.collection("products").doc(userController.wishlist[index]).snapshots(),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
                               return Center(
@@ -68,7 +70,7 @@ class MyWishListScreen extends StatelessWidget {
                                       ),
                                       child: ClipRRect(
                                           borderRadius: BorderRadius.circular(8),
-                                          child: Image.network(data['productImages'][0], fit: BoxFit.cover)),
+                                          child: Image.network(data['pdtImages'][0], fit: BoxFit.cover)),
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -86,7 +88,7 @@ class MyWishListScreen extends StatelessWidget {
                                           ),
                                           SizedBox(height: 05),
                                           Text(
-                                            "${data['price'].toStringAsFixed(2)} USD",
+                                            "${data['pdtPrice'].toStringAsFixed(2)} USD",
                                             style: GoogleFonts.acme(
                                               fontSize: 16,
                                               letterSpacing: 0.3,
@@ -101,11 +103,11 @@ class MyWishListScreen extends StatelessWidget {
                                       alignment: Alignment.bottomCenter,
                                       child: Row(
                                         children: [
-                                          cartList.contains(data['pdtId'])
+                                          userController.cart.contains(data['pdtId'])
                                               ? SizedBox()
                                               : IconButton(
                                                   onPressed: () async {
-                                                    if (cartList.contains(data['pdtId'])) {
+                                                    if (userController.cart.contains(data['pdtId'])) {
                                                       showCustomMsg(context: context, msg: "Item Already Exist in Cart!");
                                                     } else {
                                                       await FirebaseFirestore.instance
@@ -160,7 +162,7 @@ class MyWishListScreen extends StatelessWidget {
                                                         .collection("users")
                                                         .doc(FirebaseAuth.instance.currentUser!.uid)
                                                         .update({
-                                                      "wishlist": FieldValue.arrayRemove([wishlist[index]]),
+                                                      "wishlist": FieldValue.arrayRemove([userController.wishlist[index]]),
                                                     });
 
                                                     showCustomMsg(context: context, msg: "Item is Successfully Removed");

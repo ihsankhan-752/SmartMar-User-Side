@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_mart_user_side/screens/bottom_nav_bar/wishlist/my_wishlist.dart';
+import 'package:smart_mart_user_side/screens/bottom_nav_bar/cart/cart_screen.dart';
 
 import '../../constants/colors.dart';
 import '../../controllers/user_controller.dart';
@@ -48,7 +48,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
   Widget build(BuildContext context) {
     List Pages = [
       HomeScreen(),
-      MyWishListScreen(wishlist: wishlist, cartList: cartList),
+      CartScreen(pdtIds: []),
       NotificationScreen(),
       ProfileScreen(),
     ];
@@ -78,9 +78,9 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
                   },
                 ),
                 CustomWidgetSelection(
-                  title: "Saved",
+                  title: "Cart",
                   activeColor: _currentIndex == 1 ? AppColors.primaryColor : Colors.grey,
-                  icon: Icons.favorite_border,
+                  icon: Icons.shopping_cart_outlined,
                   onPressed: () {
                     setState(() {
                       _currentIndex = 1;
@@ -88,8 +88,8 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
                   },
                 ),
                 CustomWidgetSelection(
-                  title: "Cart",
-                  icon: Icons.shopping_cart,
+                  title: "Notifications",
+                  icon: Icons.notifications_none,
                   activeColor: _currentIndex == 2 ? AppColors.primaryColor : Colors.grey,
                   onPressed: () {
                     setState(() {

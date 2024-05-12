@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
+import 'package:smart_mart_user_side/constants/lists.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/all_categories.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/get_product_by_category.dart';
+import 'package:smart_mart_user_side/screens/bottom_nav_bar/wishlist/my_wishlist.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/navigations.dart';
-import '../../../controllers/user_controller.dart';
 import '../../../widgets/custom_text_fields.dart';
-import '../cart/cart_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -18,13 +17,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List tabs = ['All', 'Men', 'Women', 'Kids Wear'];
   int currentIndex = 0;
   String _selectedValue = 'All';
   @override
   Widget build(BuildContext context) {
-    final userController = Provider.of<UserController>(context);
-
     return DefaultTabController(
       length: 5,
       child: Scaffold(
@@ -42,9 +38,9 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             InkWell(
               onTap: () {
-                navigateToPageWithPush(context, CartScreen(pdtIds: userController.cart));
+                navigateToPageWithPush(context, MyWishListScreen());
               },
-              child: Icon(Icons.notifications_none, color: AppColors.primaryBlack),
+              child: Icon(Icons.favorite_border, color: AppColors.primaryBlack),
             ),
             SizedBox(width: 15),
           ],
@@ -121,6 +117,39 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ],
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  height: 35,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: categories.map((e) {
+                      return GestureDetector(
+                        onTap: () {
+                          _selectedValue = e;
+                          setState(() {});
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: _selectedValue == e ? AppColors.primaryBlack : AppColors.primaryWhite,
+                            border: Border.all(color: _selectedValue == e ? AppColors.primaryBlack : AppColors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: Text(
+                                e,
+                                style: TextStyle(
+                                  color: _selectedValue == e ? AppColors.primaryWhite : AppColors.primaryBlack,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
                 SizedBox(height: 15),
                 if (_selectedValue == 'All') ...{

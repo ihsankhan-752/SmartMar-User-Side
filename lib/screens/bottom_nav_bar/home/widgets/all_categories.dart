@@ -30,6 +30,7 @@ class ALlCategories extends StatelessWidget {
                   style: GoogleFonts.poppins(
                     color: AppColors.primaryColor,
                     fontWeight: FontWeight.bold,
+                    fontSize: 22,
                   ),
                 ),
               ),

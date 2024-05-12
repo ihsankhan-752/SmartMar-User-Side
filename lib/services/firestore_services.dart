@@ -35,6 +35,7 @@ class FireStoreServices {
         await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).update({
           "cart": FieldValue.arrayUnion([pdtId]),
         });
+        showCustomMsg(context: context, msg: "Item added to Cart");
       }
     } on FirebaseException catch (e) {
       showCustomMsg(context: context, msg: e.message);
@@ -44,12 +45,12 @@ class FireStoreServices {
   Future myCart({BuildContext? context, ProductModel? productModel}) async {
     try {
       DocumentSnapshot pdtSnap = await FirebaseFirestore.instance.collection("products").doc(productModel!.pdtId).get();
-      await FirebaseFirestore.instance.collection("mycart").doc(productModel.pdtId).set({
+      await FirebaseFirestore.instance.collection("cart").doc(productModel.pdtId).set({
         "userId": FirebaseAuth.instance.currentUser!.uid,
         "pdtId": productModel.pdtId,
         "quantity": 1,
         "price": productModel.pdtPrice,
-        "supplierId": pdtSnap['supplierId'],
+        "supplierId": pdtSnap['sellerId'],
       });
     } catch (e) {
       showCustomMsg(context: context, msg: e.toString());

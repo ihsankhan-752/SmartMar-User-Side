@@ -21,13 +21,14 @@ class GetProductByCategory extends StatelessWidget {
           );
         } else if (snapshot.data!.docs.isEmpty) {
           return Padding(
-            padding: EdgeInsets.only(top: 150),
+            padding: EdgeInsets.only(top: 180),
             child: Center(
               child: Text(
                 "No Data Found!!",
                 style: GoogleFonts.poppins(
-                  color: AppColors.primaryColor,
+                  color: AppColors.mainColor,
                   fontWeight: FontWeight.bold,
+                  fontSize: 22,
                 ),
               ),
             ),
