@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:smart_mart_user_side/models/pdt_model.dart';
+import 'package:smart_mart_user_side/screens/bottom_nav_bar/custom_bottom_navigation_bar.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/navigations.dart';
@@ -12,9 +15,10 @@ import '../payment_screen/payment_screen.dart';
 
 class PlaceOrderScreen extends StatefulWidget {
   final List pdtId;
-  double? total;
+  final double? total;
   final dynamic supplierId;
-  PlaceOrderScreen({Key? key, required this.pdtId, this.total, this.supplierId}) : super(key: key);
+  final Map quantity;
+  PlaceOrderScreen({Key? key, required this.pdtId, this.total, this.supplierId, required this.quantity}) : super(key: key);
 
   @override
   State<PlaceOrderScreen> createState() => _PlaceOrderScreenState();
@@ -24,23 +28,34 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primaryBlack,
       appBar: AppBar(
-        backgroundColor: AppColors.mainColor,
-        elevation: 0,
         centerTitle: true,
-        title: Text("Place Order", style: AppTextStyles.APPBAR_HEADING_STYLE),
+        leading: GestureDetector(
+          onTap: () {
+            widget.pdtId.clear();
+            widget.quantity.clear();
+            navigateToPageWithPush(context, CustomBottomNavigation());
+          },
+          child: Icon(Icons.arrow_back),
+        ),
+        title: Text(
+          "Place Order",
+          style: AppTextStyles.APPBAR_HEADING_STYLE.copyWith(color: AppColors.primaryBlack),
+        ),
       ),
-      body: Column(children: [
-        SizedBox(height: 20),
-        UserAddressWidget(),
-        SizedBox(height: 20),
-        Expanded(
-          child: Container(
-            margin: EdgeInsets.only(left: 20, right: 20, bottom: 80),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text("User Address", style: AppTextStyles().H2.copyWith(fontSize: 16)),
+          SizedBox(height: 8),
+          UserAddressWidget(),
+          SizedBox(height: 20),
+          Text("Products to purchase", style: AppTextStyles().H2.copyWith(fontSize: 16)),
+          Container(
+            height: Get.height * 0.6,
             width: double.infinity,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), border: Border.all(color: AppColors.primaryColor)),
             child: ListView.builder(
+              padding: EdgeInsets.zero,
               itemCount: widget.pdtId.length,
               itemBuilder: (context, index) {
                 return StreamBuilder<DocumentSnapshot>(
@@ -51,13 +66,14 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                         child: CircularProgressIndicator(),
                       );
                     }
-                    Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                    ProductModel productModel = ProductModel.fromMap(snapshot.data!);
+                    int quantity = widget.quantity[productModel.pdtId] ?? 0;
                     return Container(
                       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       height: 100,
                       decoration: BoxDecoration(
-                        color: AppColors.mainColor,
                         borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: AppColors.grey.withOpacity(0.5)),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -65,29 +81,32 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                           children: [
                             Container(
                               height: 80,
-                              width: 80,
+                              width: 100,
                               child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(data['productImages'][0], fit: BoxFit.fill)),
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: Image.network(
+                                    productModel.pdtImages![0],
+                                    fit: BoxFit.fill,
+                                  )),
                             ),
                             SizedBox(width: 20),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  data['pdtName'],
-                                  style: TextStyle(
-                                    color: AppColors.primaryWhite,
-                                    fontSize: 18,
-                                  ),
-                                ),
+                                Text(productModel.pdtName!, style: AppTextStyles().H2.copyWith(fontSize: 16)),
+                                Text(productModel.category!,
+                                    style: AppTextStyles().H2.copyWith(fontSize: 10, color: AppColors.grey)),
                                 SizedBox(height: 10),
-                                Text(
-                                  "USD ${data['price'].toString()}",
-                                  style: TextStyle(
-                                    color: AppColors.grey,
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "\$${productModel.pdtPrice!.toStringAsFixed(1)}",
+                                      style: AppTextStyles().H2.copyWith(fontSize: 14),
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text("x ${quantity.toString()}", style: AppTextStyles().H2.copyWith(fontSize: 12)),
+                                  ],
                                 ),
                               ],
                             )
@@ -100,33 +119,31 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
               },
             ),
           ),
-        ),
-      ]),
+        ]),
+      ),
       bottomSheet: Container(
-          height: 70,
-          color: AppColors.mainColor,
           child: Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-            child: PrimaryButton(
-              onTap: () async {
-                DocumentSnapshot snap =
-                    await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).get();
-                if (snap['address'] == "") {
-                  showCustomMsg(context: context, msg: "Set Your Address For Delivery First!!");
-                } else {
-                  navigateToPageWithPush(
-                    context,
-                    PaymentScreen(
-                      total: widget.total,
-                      supplierId: widget.supplierId,
-                      pdtIds: widget.pdtId,
-                    ),
-                  );
-                }
-              },
-              title: "Confirm Payment: ${widget.total} USD",
-            ),
-          )),
+        padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
+        child: PrimaryButton(
+          onTap: () async {
+            DocumentSnapshot snap =
+                await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).get();
+            if (snap['address'] == "") {
+              showCustomMsg(context: context, msg: "Set Your Address For Delivery First!!");
+            } else {
+              navigateToPageWithPush(
+                context,
+                PaymentScreen(
+                  total: widget.total,
+                  supplierId: widget.supplierId,
+                  pdtIds: widget.pdtId,
+                ),
+              );
+            }
+          },
+          title: "Confirm Payment: ${widget.total} USD",
+        ),
+      )),
     );
   }
 }

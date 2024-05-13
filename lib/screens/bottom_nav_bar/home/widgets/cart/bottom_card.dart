@@ -1,20 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_mart_user_side/controllers/user_controller.dart';
 
 import '../../../../../constants/colors.dart';
+import '../../../../../constants/navigations.dart';
 import '../../../../../widgets/buttons.dart';
+import '../../../../order_screen/place_order_screen.dart';
 
 class BottomCard extends StatefulWidget {
-  final UserController userController;
-  const BottomCard({Key? key, required this.userController}) : super(key: key);
+  const BottomCard({Key? key}) : super(key: key);
 
   @override
   State<BottomCard> createState() => _BottomCardState();
 }
 
 class _BottomCardState extends State<BottomCard> {
+  List pdtIds = [];
+  Map<String, int> quantitiesMap = {};
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,6 +41,11 @@ class _BottomCardState extends State<BottomCard> {
                   var price = item['price'];
                   var quantity = item['quantity'];
                   total += price * quantity;
+                  quantitiesMap[item['pdtId']] = quantity;
+
+                  if (!pdtIds.contains(item.id)) {
+                    pdtIds.add(item.id);
+                  }
                 }
                 String? supplierId;
                 for (var item in snapshot.data!.docs) {
@@ -49,14 +56,15 @@ class _BottomCardState extends State<BottomCard> {
                   width: MediaQuery.of(context).size.width - 100,
                   child: PrimaryButton(
                     onTap: () async {
-                      // navigateToPageWithPush(
-                      //   context,
-                      //   // PlaceOrderScreen(
-                      //   //   pdtId: widget.pdtId,
-                      //   //   total: total,
-                      //   //   supplierId: supplierId,
-                      //   // ),
-                      // );
+                      navigateToPageWithPush(
+                        context,
+                        PlaceOrderScreen(
+                          pdtId: pdtIds,
+                          total: total,
+                          supplierId: supplierId,
+                          quantity: quantitiesMap,
+                        ),
+                      );
                     },
                     title: "Total: \$ ${total.toStringAsFixed(1)} Go To CheckOut",
                   ),

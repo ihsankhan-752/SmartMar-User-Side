@@ -105,9 +105,7 @@ class _CartScreenState extends State<CartScreen> {
                 },
               ),
             ),
-      bottomSheet: BottomCard(
-        userController: userController,
-      ),
+      bottomSheet: BottomCard(),
     );
   }
 }
