@@ -88,15 +88,18 @@ class IncrementDecrementButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 22,
-      width: 25,
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.grey.withOpacity(0.5)),
-        borderRadius: BorderRadius.circular(05),
-      ),
-      child: Center(
-        child: Icon(icon, size: 15, color: AppColors.primaryBlack),
+    return GestureDetector(
+      onTap: onPressed ?? () {},
+      child: Container(
+        height: 22,
+        width: 25,
+        decoration: BoxDecoration(
+          border: Border.all(color: AppColors.grey.withOpacity(0.5)),
+          borderRadius: BorderRadius.circular(05),
+        ),
+        child: Center(
+          child: Icon(icon, size: 15, color: AppColors.primaryBlack),
+        ),
       ),
     );
   }

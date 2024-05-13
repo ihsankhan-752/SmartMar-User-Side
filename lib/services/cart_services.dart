@@ -72,20 +72,10 @@ class CartServices {
     }
   }
 
-  Future incrementPdtQuantity(BuildContext context, String pdtId, int quantity) async {
+  Future incrementDecrementPdtQuantity(BuildContext context, String pdtId, int quantity) async {
     try {
       FirebaseFirestore.instance.collection("cart").doc(pdtId).update({
-        "quantity": quantity++,
-      });
-    } catch (e) {
-      showCustomMsg(context: context, msg: e.toString());
-    }
-  }
-
-  Future decrementPdtQuantity(BuildContext context, String pdtId, int quantity) async {
-    try {
-      FirebaseFirestore.instance.collection("cart").doc(pdtId).update({
-        "quantity": quantity--,
+        "quantity": quantity,
       });
     } catch (e) {
       showCustomMsg(context: context, msg: e.toString());

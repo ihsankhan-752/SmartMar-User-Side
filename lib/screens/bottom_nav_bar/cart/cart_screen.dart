@@ -6,11 +6,11 @@ import 'package:smart_mart_user_side/controllers/user_controller.dart';
 import 'package:smart_mart_user_side/models/pdt_model.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/cart/widgets/cart_product_image_portion.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/cart/widgets/cart_product_name_and_price_portion.dart';
+import 'package:smart_mart_user_side/screens/bottom_nav_bar/cart/widgets/cart_product_quantity_increment_decrement_portion.dart';
 import 'package:smart_mart_user_side/services/cart_services.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/text_styles.dart';
-import '../../../widgets/buttons.dart';
 import '../home/widgets/cart/bottom_card.dart';
 
 class CartScreen extends StatefulWidget {
@@ -22,6 +22,7 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   int quantity = 0;
+
   @override
   Widget build(BuildContext context) {
     final userController = Provider.of<UserController>(context);
@@ -88,20 +89,9 @@ class _CartScreenState extends State<CartScreen> {
                                       child: Icon(Icons.close, size: 20, color: AppColors.grey),
                                     ),
                                     Spacer(),
-                                    Row(
-                                      children: [
-                                        IncrementDecrementButton(
-                                          onPressed: () {},
-                                          icon: Icons.remove,
-                                        ),
-                                        SizedBox(width: 08),
-                                        Text("2", style: AppTextStyles().H2.copyWith(fontSize: 14)),
-                                        SizedBox(width: 08),
-                                        IncrementDecrementButton(
-                                          onPressed: () {},
-                                          icon: Icons.add,
-                                        ),
-                                      ],
+                                    CartProductQuantityIncrementDecrementPortion(
+                                      productModel: productModel,
+                                      pdtId: userController.userModel!.cart![index],
                                     ),
                                   ],
                                 ),
