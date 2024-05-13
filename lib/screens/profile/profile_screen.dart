@@ -15,7 +15,6 @@ import '../../constants/text_styles.dart';
 import '../../controllers/user_controller.dart';
 import '../../services/auth_services.dart';
 import '../address_screen/add_address_screen.dart';
-import '../bottom_nav_bar/cart/cart_screen.dart';
 import 'edit_profile_screen.dart';
 import 'order_history.dart';
 
@@ -95,14 +94,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
               //         )),
               //     icon: FontAwesomeIcons.heart,
               //     title: "My Wishlist"),
-              ProfileListTileWidget(
-                  onPressed: () => navigateToPageWithPush(
-                      context,
-                      CartScreen(
-                        pdtIds: userController.userModel!.cart!,
-                      )),
-                  icon: FontAwesomeIcons.cartShopping,
-                  title: "My Cart"),
+              // ProfileListTileWidget(
+              //     onPressed: () => navigateToPageWithPush(
+              //         context,
+              //         CartScreen(
+              //           pdtIds: userController.userModel!.cart!,
+              //         )),
+              //     icon: FontAwesomeIcons.cartShopping,
+              //     title: "My Cart"),
               Text(
                 "-----------Account Info------------",
                 style: TextStyle(

@@ -48,7 +48,7 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
   Widget build(BuildContext context) {
     List Pages = [
       HomeScreen(),
-      CartScreen(pdtIds: []),
+      CartScreen(),
       NotificationScreen(),
       ProfileScreen(),
     ];
