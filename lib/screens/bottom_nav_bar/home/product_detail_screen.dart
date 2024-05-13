@@ -5,10 +5,10 @@ import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:smart_mart_user_side/models/pdt_model.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/pdt_detail_widgets/bottom_portion.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/pdt_detail_widgets/product_information_widget.dart';
+import 'package:smart_mart_user_side/services/wishlist_services.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/text_styles.dart';
-import '../../../services/firestore_services.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final ProductModel productModel;
@@ -75,7 +75,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                         ? Icon(Icons.favorite)
                                         : Icon(Icons.favorite_border),
                                     onPressed: () async {
-                                      await FireStoreServices().addItemToWishlist(context, widget.productModel.pdtId!);
+                                      await WishlistServices().addItemToWishlist(context, widget.productModel.pdtId!);
                                       setState(() {});
                                     },
                                   );

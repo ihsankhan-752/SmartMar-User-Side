@@ -12,12 +12,8 @@ class CartProductImagePortion extends StatelessWidget {
     return Container(
       height: Get.height * 0.09,
       width: Get.width * 0.2,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.orange),
-        borderRadius: BorderRadius.circular(8),
-      ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(5),
         child: Image.network(
           productModel.pdtImages![0],
           fit: BoxFit.cover,

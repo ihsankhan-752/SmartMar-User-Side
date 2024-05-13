@@ -18,7 +18,7 @@ class _BottomCardState extends State<BottomCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.mainColor,
+      color: AppColors.primaryWhite,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
@@ -26,13 +26,14 @@ class _BottomCardState extends State<BottomCard> {
           children: [
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection("mycart")
+                  .collection("cart")
                   .where("userId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 }
+
                 double total = 0.0;
                 for (var item in snapshot.data!.docs) {
                   var price = item['price'];
@@ -45,7 +46,7 @@ class _BottomCardState extends State<BottomCard> {
                 }
 
                 return SizedBox(
-                  width: MediaQuery.of(context).size.width * .7,
+                  width: MediaQuery.of(context).size.width - 100,
                   child: PrimaryButton(
                     onTap: () async {
                       // navigateToPageWithPush(
@@ -57,7 +58,7 @@ class _BottomCardState extends State<BottomCard> {
                       //   // ),
                       // );
                     },
-                    title: "Total: \$ ${total.toStringAsFixed(1)} Proceed To CheckOut",
+                    title: "Total: \$ ${total.toStringAsFixed(1)} Go To CheckOut",
                   ),
                 );
               },

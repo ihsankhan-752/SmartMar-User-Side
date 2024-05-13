@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:smart_mart_user_side/models/pdt_model.dart';
+import 'package:smart_mart_user_side/services/cart_services.dart';
 
 import '../../../../../constants/colors.dart';
-import '../../../../../services/firestore_services.dart';
 import '../../../../../widgets/buttons.dart';
 
 class BottomPortion extends StatelessWidget {
@@ -51,8 +51,8 @@ class BottomPortion extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.6,
               child: PrimaryButton(
                 onTap: () async {
-                  await FireStoreServices().addItemToCart(context, productModel.pdtId!);
-                  await FireStoreServices().myCart(context: context, productModel: productModel);
+                  await CartServices().addItemToCart(context, productModel.pdtId!);
+                  await CartServices().myCart(context: context, productModel: productModel);
                 },
                 title: "Add To Cart",
               ),
