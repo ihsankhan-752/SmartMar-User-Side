@@ -26,12 +26,16 @@ class CartModel {
   }
 
   factory CartModel.fromMap(DocumentSnapshot map) {
-    return CartModel(
-      pdtId: map['pdtId'] as String,
-      userId: map['userId'] as String,
-      quantity: map['quantity'] as int,
-      price: map['price'] as double,
-      supplierId: map['supplierId'] as String,
-    );
+    if (map.exists) {
+      return CartModel(
+        pdtId: map['pdtId'] as String,
+        userId: map['userId'] as String,
+        quantity: map['quantity'] as int,
+        price: map['price'] as double,
+        supplierId: map['supplierId'] as String,
+      );
+    } else {
+      return CartModel();
+    }
   }
 }

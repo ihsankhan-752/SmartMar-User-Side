@@ -7,12 +7,12 @@ import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:smart_mart_user_side/screens/payment_screen/widgets/payment_and_shipment_widget.dart';
+import 'package:smart_mart_user_side/services/order_services.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/navigations.dart';
 import '../../constants/text_styles.dart';
-import '../../services/notification_services.dart';
 import '../../services/stripe_services.dart';
 import '../../widgets/buttons.dart';
 import '../../widgets/custom_msg.dart';
@@ -22,7 +22,8 @@ class PaymentScreen extends StatefulWidget {
   double? total;
   final String? supplierId;
   final List<dynamic>? pdtIds;
-  PaymentScreen({Key? key, this.total, this.supplierId, this.pdtIds}) : super(key: key);
+  final List quantities;
+  PaymentScreen({Key? key, this.total, this.supplierId, this.pdtIds, required this.quantities}) : super(key: key);
 
   @override
   State<PaymentScreen> createState() => _PaymentScreenState();
@@ -127,12 +128,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 onTap: () async {
                   if (_groupValue == 1) {
                     showModalBottomSheet(
-                        backgroundColor: AppColors.mainColor,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                        )),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                          ),
+                        ),
                         context: context,
                         builder: (_) {
                           return Container(
@@ -154,85 +155,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 20),
                                   child: PrimaryButton(
-                                    onTap: () async {
-                                      for (var id in widget.pdtIds!) {
-                                        DocumentSnapshot pdtSnap =
-                                            await FirebaseFirestore.instance.collection("products").doc(id).get();
-                                        setState(() {
-                                          pdtName.add(pdtSnap['pdtName']);
-                                          pdtImages.add(pdtSnap['productImages'][0]);
-                                          pdtPrices.add(pdtSnap['price']);
-                                          pdtIds.add(id);
-                                          widget.total = 0.0;
-                                        });
-                                      }
-
-                                      DocumentSnapshot userData = await FirebaseFirestore.instance
-                                          .collection("users")
-                                          .doc(FirebaseAuth.instance.currentUser!.uid)
-                                          .get();
-                                      DocumentSnapshot supplierData =
-                                          await FirebaseFirestore.instance.collection("users").doc(widget.supplierId).get();
-                                      var orderId = Uuid().v1();
-                                      try {
-                                        await FirebaseFirestore.instance.collection("orders").doc(orderId).set({
-                                          "customerId": FirebaseAuth.instance.currentUser!.uid,
-                                          "customerName": userData['userName'],
-                                          "customerImage": userData['image'],
-                                          "customerEmail": userData['email'],
-                                          "customerAddress": userData["address"],
-                                          "customerPhone": userData['phone'],
-                                          "supplierId": supplierData['uid'],
-                                          "supplierName": supplierData['userName'],
-                                          "supplierImage": supplierData['image'],
-                                          "supplierContact": supplierData['phone'],
-                                          "orderId": orderId,
-                                          "pdtName": FieldValue.arrayUnion(pdtName),
-                                          "pdtImages": FieldValue.arrayUnion(pdtImages),
-                                          "pdtPrice": FieldValue.arrayUnion(pdtPrices),
-                                          "pdtIds": FieldValue.arrayUnion(pdtIds),
-                                          "orderPrice": widget.total,
-                                          "orderStatus": "preparing",
-                                          "deliveryDate": "",
-                                          "orderDate": DateTime.now(),
-                                          'paymentStatus': "cash on delivery",
-                                          "orderReview": false,
-                                          "orderQuantity": pdtQuantity,
-                                        });
-                                        navigateToPageWithPush(context, CustomBottomNavigation());
-                                        await FirebaseFirestore.instance
-                                            .collection("users")
-                                            .doc(FirebaseAuth.instance.currentUser!.uid)
-                                            .update({
-                                          "cart": [],
-                                        });
-                                        QuerySnapshot cartSnap = await FirebaseFirestore.instance
-                                            .collection('mycart')
-                                            .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                                            .get();
-
-                                        for (var i in cartSnap.docs) {
-                                          i.reference.delete();
-                                        }
-                                        await NotificationServices().sendPushNotification(
-                                          widget.supplierId!,
-                                          'Order Notification',
-                                          'You Received an Order from ${userData['userName']}',
-                                        );
-                                        await NotificationServices().addNotificationInDB(
-                                          supplierId: widget.supplierId!,
-                                          title: 'Your Received a new Order',
-                                        );
-
-                                        setState(() {
-                                          widget.total = 0.0;
-                                          pdtQuantity = 0;
-                                          widget.total = 0.0;
-                                        });
-                                      } catch (e) {
-                                        print(e);
-                                        showCustomMsg(context: context, msg: e.toString());
-                                      }
+                                    onTap: () {
+                                      OrderServices().makeOrder(
+                                        context: context,
+                                        productIds: widget.pdtIds!,
+                                        totalPrice: widget.total!,
+                                        quantities: widget.quantities,
+                                        sellerId: widget.supplierId!,
+                                      );
+                                      setState(() {
+                                        widget.total = 0.0;
+                                      });
                                     },
                                     title: "Confirm ${widget.total}",
                                   ),

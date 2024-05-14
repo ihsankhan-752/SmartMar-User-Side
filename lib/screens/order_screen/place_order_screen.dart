@@ -68,6 +68,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                     }
                     ProductModel productModel = ProductModel.fromMap(snapshot.data!);
                     int quantity = widget.quantity[productModel.pdtId] ?? 0;
+
                     return Container(
                       margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       height: 100,
@@ -137,6 +138,7 @@ class _PlaceOrderScreenState extends State<PlaceOrderScreen> {
                   total: widget.total,
                   supplierId: widget.supplierId,
                   pdtIds: widget.pdtId,
+                  quantities: widget.quantity.values.toList(),
                 ),
               );
             }
