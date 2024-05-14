@@ -3,11 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-import '../../../constants/colors.dart';
-import '../../../constants/text_styles.dart';
-import '../../../widgets/buttons.dart';
-import '../../../widgets/custom_msg.dart';
-import '../../../widgets/custom_text_fields.dart';
+import '../../../../constants/colors.dart';
+import '../../../../constants/text_styles.dart';
+import '../../../../widgets/buttons.dart';
+import '../../../../widgets/custom_msg.dart';
+import '../../../../widgets/custom_text_fields.dart';
 
 class OrderRatingScreen extends StatefulWidget {
   final List? pdtId;

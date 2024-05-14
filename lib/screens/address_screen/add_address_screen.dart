@@ -1,9 +1,9 @@
-import 'package:country_state_city_picker/country_state_city_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_mart_user_side/controllers/loading_controller.dart';
+import 'package:smart_mart_user_side/controllers/user_controller.dart';
 import 'package:smart_mart_user_side/services/user_profile_services.dart';
-import 'package:smart_mart_user_side/widgets/custom_msg.dart';
+import 'package:smart_mart_user_side/widgets/custom_text_fields.dart';
 
 import '../../constants/colors.dart';
 import '../../constants/text_styles.dart';
@@ -17,12 +17,12 @@ class AddAddressScreen extends StatefulWidget {
 }
 
 class _AddAddressScreenState extends State<AddAddressScreen> {
-  String? countryValue;
-  late String stateValue;
-  late String cityValue;
-  GlobalKey<FormState> _key = GlobalKey();
+  TextEditingController _countryController = TextEditingController();
+  TextEditingController _stateController = TextEditingController();
+  TextEditingController _cityController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final userController = Provider.of<UserController>(context).userModel;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -35,28 +35,22 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: ListView(
           children: [
-            SizedBox(height: 20),
-            SelectState(
-              style: TextStyle(
-                color: AppColors.grey,
-              ),
-              onCountryChanged: (value) {
-                setState(() {
-                  countryValue = value;
-                });
-              },
-              onStateChanged: (value) {
-                setState(() {
-                  stateValue = value;
-                });
-              },
-              onCityChanged: (value) {
-                setState(() {
-                  cityValue = value;
-                });
-              },
-            ),
             SizedBox(height: 50),
+            AuthTextInput(
+              controller: _countryController,
+              hintText: userController!.country!.isEmpty ? " Country" : _countryController.text,
+            ),
+            SizedBox(height: 20),
+            AuthTextInput(
+              controller: _stateController,
+              hintText: userController.state!.isEmpty ? " State" : _countryController.text,
+            ),
+            SizedBox(height: 20),
+            AuthTextInput(
+              controller: _cityController,
+              hintText: userController.state!.isEmpty ? " City" : _countryController.text,
+            ),
+            SizedBox(height: 40),
             Consumer<LoadingController>(builder: (context, loadingController, child) {
               return loadingController.isLoading
                   ? Center(
@@ -64,14 +58,12 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
                     )
                   : PrimaryButton(
                       onTap: () {
-                        if (countryValue != null) {
-                          UserProfileServices.updateUserAddress(
-                            context: context,
-                            address: countryValue! + " " + stateValue + " " + cityValue,
-                          );
-                        } else {
-                          showCustomMsg(context: context, msg: "Choose Country");
-                        }
+                        UserProfileServices.updateUserAddress(
+                          context: context,
+                          country: _countryController.text.isEmpty ? userController.country : _countryController.text,
+                          state: _stateController.text.isEmpty ? userController.state : _stateController.text,
+                          city: _cityController.text.isEmpty ? userController.city : _cityController.text,
+                        );
                       },
                       title: "Add New Address",
                     );

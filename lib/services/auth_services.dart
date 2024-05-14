@@ -16,15 +16,12 @@ class AuthServices {
     String? email,
     String? password,
     String? username,
-    String? address,
     int? contact,
   }) async {
     if (username!.isEmpty) {
       showCustomMsg(context: context, msg: 'username required');
     } else if (email!.isEmpty) {
       showCustomMsg(context: context, msg: 'Email required');
-    } else if (address!.isEmpty) {
-      showCustomMsg(context: context, msg: 'Address required');
     } else if (contact == null) {
       showCustomMsg(context: context, msg: 'Contact required');
     } else if (password!.isEmpty) {
@@ -38,7 +35,9 @@ class AuthServices {
           uid: FirebaseAuth.instance.currentUser!.uid,
           email: email,
           username: username,
-          address: address,
+          country: "",
+          state: "",
+          city: "",
           phone: contact,
         );
         await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).set(userModel.toMap());

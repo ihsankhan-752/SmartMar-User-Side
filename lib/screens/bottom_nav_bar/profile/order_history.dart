@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_mart_user_side/screens/profile/widgets/action_button.dart';
-import 'package:smart_mart_user_side/screens/profile/widgets/order_info_card.dart';
-import 'package:smart_mart_user_side/screens/profile/widgets/order_rating_screen.dart';
+import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/widgets/action_button.dart';
+import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/widgets/order_info_card.dart';
+import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/widgets/order_rating_screen.dart';
 import 'package:stylish_dialog/stylish_dialog.dart';
 
-import '../../constants/colors.dart';
-import '../../constants/navigations.dart';
-import '../../constants/text_styles.dart';
-import '../../widgets/custom_msg.dart';
-import '../bottom_nav_bar/custom_bottom_navigation_bar.dart';
+import '../../../constants/colors.dart';
+import '../../../constants/navigations.dart';
+import '../../../constants/text_styles.dart';
+import '../../../widgets/custom_msg.dart';
+import '../custom_bottom_navigation_bar.dart';
 
 class OrderHistory extends StatelessWidget {
   const OrderHistory({Key? key}) : super(key: key);

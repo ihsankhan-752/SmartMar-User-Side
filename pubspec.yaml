@@ -66,6 +66,9 @@ dependencies:
   timeago: any
   get: ^4.6.6
   flutter_slidable: ^3.1.0
+  flutter_image_compress: ^2.2.0
+  csc_picker: ^0.2.7
+  country_state_city_pro: ^0.0.6
 
 dev_dependencies:
   flutter_test:

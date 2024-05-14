@@ -53,12 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 hintText: "test@gmail.com",
               ),
               SizedBox(height: 15),
-              AuthTextInput(
-                labelText: 'Address',
-                controller: AppTextController.addressController,
-                hintText: "Kpk, Pakistan",
-              ),
-              SizedBox(height: 15),
+
               AuthTextInput(
                 inputType: TextInputType.number,
                 labelText: 'Contact',
@@ -94,7 +89,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             username: AppTextController.usernameController.text,
                             email: AppTextController.emailController.text,
                             contact: int.tryParse(AppTextController.contactController.text),
-                            address: AppTextController.addressController.text,
                             password: AppTextController.passwordController.text,
                           )
                               .whenComplete(() {

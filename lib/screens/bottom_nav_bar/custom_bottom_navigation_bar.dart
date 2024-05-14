@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/cart/cart_screen.dart';
+import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/profile_screen.dart';
 
 import '../../constants/colors.dart';
 import '../../controllers/user_controller.dart';
 import '../../services/notification_services.dart';
-import '../profile/profile_screen.dart';
 import 'home/home_screen.dart';
 import 'notifications/notification_screen.dart';
 

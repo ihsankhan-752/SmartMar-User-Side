@@ -75,7 +75,7 @@ class AuthTextInput extends StatelessWidget {
           color: Color(0xff2b2b2b),
         ),
         hintText: hintText,
-        hintStyle: GoogleFonts.nunito(fontSize: 12, color: Color(0xff2b2b2b).withOpacity(0.4)),
+        hintStyle: GoogleFonts.nunito(fontSize: 14, color: Color(0xff2b2b2b).withOpacity(0.4)),
         suffixIcon: suffixIcon ?? SizedBox(),
       ),
     );

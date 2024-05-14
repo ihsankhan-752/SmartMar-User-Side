@@ -25,7 +25,7 @@ class UserAddressWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
-          userController!.address == ""
+          userController!.country == ""
               ? Center(
                   child: InkWell(
                     onTap: () {
@@ -62,7 +62,7 @@ class UserAddressWidget extends StatelessWidget {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          "Address: ${userController.address}",
+                          "Address: ${userController.country}",
                           style: AppTextStyles().H2.copyWith(fontSize: 13),
                         ),
                       ],
