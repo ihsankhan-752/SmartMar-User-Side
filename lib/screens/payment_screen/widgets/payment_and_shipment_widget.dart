@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_mart_user_side/constants/text_styles.dart';
 
 import '../../../constants/colors.dart';
 
@@ -12,39 +13,30 @@ class PaymentAndShipmentWidget extends StatelessWidget {
     return Column(
       children: [
         Container(
-            margin: EdgeInsets.symmetric(horizontal: 20),
-            height: 150,
             width: double.infinity,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: AppColors.mainColor,
+              border: Border.all(color: AppColors.grey.withOpacity(0.5)),
+              borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Total :${total}",
-                    style: TextStyle(
-                      color: AppColors.primaryWhite,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Divider(thickness: 1, color: AppColors.primaryColor),
                   SizedBox(height: 10),
                   Text(
-                    "OrderTotal : ${orderTotal.toStringAsFixed(2)}",
-                    style: TextStyle(
-                      color: AppColors.primaryWhite,
-                    ),
+                    "OrderTotal : \$ ${orderTotal.toStringAsFixed(1)} ",
+                    style: AppTextStyles().H2.copyWith(fontSize: 14),
                   ),
                   SizedBox(height: 10),
                   Text(
-                    "Shipment :${shipmentCost.toStringAsFixed(2)}",
-                    style: TextStyle(
-                      color: AppColors.primaryWhite,
-                    ),
+                    "Shipment Charges : \$ ${shipmentCost.toStringAsFixed(1)}",
+                    style: AppTextStyles().H2.copyWith(fontSize: 14),
+                  ),
+                  Divider(),
+                  Text(
+                    "Total : \$ ${total}",
+                    style: AppTextStyles().H2.copyWith(fontSize: 16),
                   ),
                 ],
               ),

@@ -39,300 +39,274 @@ class _PaymentScreenState extends State<PaymentScreen> {
   int? pdtQuantity;
   @override
   Widget build(BuildContext context) {
-    print(widget.pdtIds);
     double orderTotal = widget.total! - 10.0;
     double shipmentCost = 10.0;
 
     return Scaffold(
-      backgroundColor: AppColors.primaryBlack,
       appBar: AppBar(
-        backgroundColor: AppColors.mainColor,
-        elevation: 0,
         centerTitle: true,
-        title: Text("Payment Screen", style: AppTextStyles.APPBAR_HEADING_STYLE),
+        title: Text("Payment Screen", style: AppTextStyles.APPBAR_HEADING_STYLE.copyWith(color: AppColors.primaryBlack)),
       ),
-      body: FutureBuilder<DocumentSnapshot>(
-        future: FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).get(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Material(
-              child: Center(
-                child: Text("SomeThing went wrong!"),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 20),
+            Text(
+              "Payment Details",
+              style: AppTextStyles().H2.copyWith(fontSize: 18),
+            ),
+            SizedBox(height: 5),
+            PaymentAndShipmentWidget(
+              total: widget.total!,
+              shipmentCost: shipmentCost,
+              orderTotal: orderTotal,
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Payment Methods",
+              style: AppTextStyles().H2.copyWith(fontSize: 18),
+            ),
+            SizedBox(height: 5),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(color: AppColors.grey.withOpacity(0.5)),
               ),
-            );
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          if (snapshot.connectionState == ConnectionState.done) {
-            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-            return Column(
-              children: [
-                SizedBox(height: 20),
-                PaymentAndShipmentWidget(
-                  total: widget.total!,
-                  shipmentCost: shipmentCost,
-                  orderTotal: orderTotal,
-                ),
-                SizedBox(height: 20),
-                // PaymentMethodSelectionWidget(groupValue: _groupValue),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: AppColors.mainColor,
-                  ),
-                  child: Column(
-                    children: [
-                      RadioListTile(
-                        activeColor: AppColors.primaryColor,
-                        value: 1,
-                        groupValue: _groupValue,
-                        onChanged: (v) {
-                          setState(() {
-                            _groupValue = int.parse(v.toString());
-                          });
-                        },
-                        title: Text(
-                          "Cash On Delivery",
-                          style: TextStyle(
-                            color: AppColors.primaryWhite,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          "Pay at Home",
-                          style: TextStyle(
-                            color: AppColors.grey,
-                          ),
-                        ),
-                      ),
-                      RadioListTile(
-                        activeColor: AppColors.primaryColor,
-                        value: 2,
-                        groupValue: _groupValue,
-                        onChanged: (v) {
-                          setState(() {
-                            _groupValue = int.parse(v.toString());
-                          });
-                        },
-                        title: Text(
-                          "Pay via Visa/ Master Card",
-                          style: TextStyle(
-                            color: AppColors.primaryWhite,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(FontAwesomeIcons.ccMastercard, color: Colors.blue),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Spacer(),
-                Container(
-                  margin: EdgeInsets.all(10),
-                  child: PrimaryButton(
-                    onTap: () async {
-                      if (_groupValue == 1) {
-                        showModalBottomSheet(
-                            backgroundColor: AppColors.mainColor,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                            )),
-                            context: context,
-                            builder: (_) {
-                              return Container(
-                                height: MediaQuery.of(context).size.height * 0.3,
-                                width: double.infinity,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Pay At Home ${widget.total}",
-                                      style: AppTextStyles.APPBAR_HEADING_STYLE.copyWith(
-                                        color: Colors.blueGrey,
-                                        fontSize: 20,
-                                        letterSpacing: 0.5,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    SizedBox(height: 20),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                                      child: PrimaryButton(
-                                        onTap: () async {
-                                          for (var id in widget.pdtIds!) {
-                                            DocumentSnapshot pdtSnap =
-                                                await FirebaseFirestore.instance.collection("products").doc(id).get();
-                                            setState(() {
-                                              pdtName.add(pdtSnap['pdtName']);
-                                              pdtImages.add(pdtSnap['productImages'][0]);
-                                              pdtPrices.add(pdtSnap['price']);
-                                              pdtIds.add(id);
-                                              widget.total = 0.0;
-                                            });
-                                          }
-
-                                          DocumentSnapshot userData = await FirebaseFirestore.instance
-                                              .collection("users")
-                                              .doc(FirebaseAuth.instance.currentUser!.uid)
-                                              .get();
-                                          DocumentSnapshot supplierData =
-                                              await FirebaseFirestore.instance.collection("users").doc(widget.supplierId).get();
-                                          var orderId = Uuid().v1();
-                                          try {
-                                            await FirebaseFirestore.instance.collection("orders").doc(orderId).set({
-                                              "customerId": FirebaseAuth.instance.currentUser!.uid,
-                                              "customerName": userData['userName'],
-                                              "customerImage": userData['image'],
-                                              "customerEmail": userData['email'],
-                                              "customerAddress": userData["address"],
-                                              "customerPhone": userData['phone'],
-                                              "supplierId": supplierData['uid'],
-                                              "supplierName": supplierData['userName'],
-                                              "supplierImage": supplierData['image'],
-                                              "supplierContact": supplierData['phone'],
-                                              "orderId": orderId,
-                                              "pdtName": FieldValue.arrayUnion(pdtName),
-                                              "pdtImages": FieldValue.arrayUnion(pdtImages),
-                                              "pdtPrice": FieldValue.arrayUnion(pdtPrices),
-                                              "pdtIds": FieldValue.arrayUnion(pdtIds),
-                                              "orderPrice": widget.total,
-                                              "orderStatus": "preparing",
-                                              "deliveryDate": "",
-                                              "orderDate": DateTime.now(),
-                                              'paymentStatus': "cash on delivery",
-                                              "orderReview": false,
-                                              "orderQuantity": pdtQuantity,
-                                            });
-                                            navigateToPageWithPush(context, CustomBottomNavigation());
-                                            await FirebaseFirestore.instance
-                                                .collection("users")
-                                                .doc(FirebaseAuth.instance.currentUser!.uid)
-                                                .update({
-                                              "cart": [],
-                                            });
-                                            QuerySnapshot cartSnap = await FirebaseFirestore.instance
-                                                .collection('mycart')
-                                                .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                                                .get();
-
-                                            for (var i in cartSnap.docs) {
-                                              i.reference.delete();
-                                            }
-                                            await NotificationServices().sendPushNotification(
-                                              widget.supplierId!,
-                                              'Order Notification',
-                                              'You Received an Order from ${userData['userName']}',
-                                            );
-                                            await NotificationServices().addNotificationInDB(
-                                              supplierId: widget.supplierId!,
-                                              title: 'Your Received a new Order',
-                                            );
-
-                                            setState(() {
-                                              widget.total = 0.0;
-                                              pdtQuantity = 0;
-                                              widget.total = 0.0;
-                                            });
-                                          } catch (e) {
-                                            print(e);
-                                            showCustomMsg(context: context, msg: e.toString());
-                                          }
-                                        },
-                                        title: "Confirm ${widget.total}",
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              );
-                            });
-                      } else if (_groupValue == 2) {
-                        // makePaymentWithCard(context);
-                        for (var id in widget.pdtIds!) {
-                          QuerySnapshot cartSnap = await FirebaseFirestore.instance
-                              .collection("mycart")
-                              .where("userId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                              .get();
-                          for (var ids in cartSnap.docs) {
-                            pdtQuantity = ids['quantity'];
-                            print(pdtQuantity);
-                          }
-                          DocumentSnapshot pdtSnap = await FirebaseFirestore.instance.collection("products").doc(id).get();
-                          setState(() {
-                            pdtName.add(pdtSnap['pdtName']);
-                            pdtImages.add(pdtSnap['productImages'][0]);
-                            pdtPrices.add(pdtSnap['price']);
-                            pdtIds.add(id);
-                          });
-                        }
-
-                        DocumentSnapshot userData = await FirebaseFirestore.instance
-                            .collection("users")
-                            .doc(FirebaseAuth.instance.currentUser!.uid)
-                            .get();
-                        DocumentSnapshot supplierData =
-                            await FirebaseFirestore.instance.collection("users").doc(widget.supplierId).get();
-                        String orderId = Uuid().v1();
-                        await makePayment(
-                          orderData: {
-                            "customerId": FirebaseAuth.instance.currentUser!.uid,
-                            "customerName": userData['userName'],
-                            "customerImage": userData['image'],
-                            "customerEmail": userData['email'],
-                            "customerAddress": userData["address"],
-                            "customerPhone": userData['phone'],
-                            "supplierId": supplierData['uid'],
-                            "supplierName": supplierData['userName'],
-                            "supplierImage": supplierData['image'],
-                            "supplierContact": supplierData['phone'],
-                            "orderId": orderId,
-                            "pdtName": FieldValue.arrayUnion(pdtName),
-                            "pdtImages": FieldValue.arrayUnion(pdtImages),
-                            "pdtPrice": FieldValue.arrayUnion(pdtPrices),
-                            "pdtIds": FieldValue.arrayUnion(pdtIds),
-                            "orderPrice": widget.total,
-                            "orderStatus": "preparing",
-                            "deliveryDate": "",
-                            "orderDate": DateTime.now(),
-                            'paymentStatus': "card",
-                            "orderReview": false,
-                            "orderQuantity": pdtQuantity,
-                          },
-                          orderId: orderId,
-                          amount: "10000",
-                        );
-                        setState(() {
-                          widget.total = 0.0;
-                        });
-                      } else {
-                        return null;
-                      }
+              child: Column(
+                children: [
+                  RadioListTile(
+                    activeColor: AppColors.primaryColor,
+                    value: 1,
+                    groupValue: _groupValue,
+                    onChanged: (v) {
+                      setState(() {
+                        _groupValue = int.parse(v.toString());
+                      });
                     },
-                    title: "Confirm ${widget.total} USD",
+                    title: Text(
+                      "Cash On Delivery",
+                      style: AppTextStyles().H2.copyWith(fontSize: 16),
+                    ),
+                    subtitle: Text(
+                      "Pay at Home",
+                      style: TextStyle(
+                        color: AppColors.grey,
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-              ],
-            );
-          } else {
-            return Center(
-              child: SizedBox(),
-            );
-          }
-        },
+                  RadioListTile(
+                    activeColor: AppColors.primaryColor,
+                    value: 2,
+                    groupValue: _groupValue,
+                    onChanged: (v) {
+                      setState(() {
+                        _groupValue = int.parse(v.toString());
+                      });
+                    },
+                    title: Text(
+                      "Pay via Visa/ Master Card",
+                      style: AppTextStyles().H2.copyWith(fontSize: 16),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(FontAwesomeIcons.ccMastercard, color: AppColors.primaryColor),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Spacer(),
+            Container(
+              margin: EdgeInsets.all(10),
+              child: PrimaryButton(
+                onTap: () async {
+                  if (_groupValue == 1) {
+                    showModalBottomSheet(
+                        backgroundColor: AppColors.mainColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                        )),
+                        context: context,
+                        builder: (_) {
+                          return Container(
+                            height: MediaQuery.of(context).size.height * 0.3,
+                            width: double.infinity,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Pay At Home ${widget.total}",
+                                  style: AppTextStyles.APPBAR_HEADING_STYLE.copyWith(
+                                    color: Colors.blueGrey,
+                                    fontSize: 20,
+                                    letterSpacing: 0.5,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                  child: PrimaryButton(
+                                    onTap: () async {
+                                      for (var id in widget.pdtIds!) {
+                                        DocumentSnapshot pdtSnap =
+                                            await FirebaseFirestore.instance.collection("products").doc(id).get();
+                                        setState(() {
+                                          pdtName.add(pdtSnap['pdtName']);
+                                          pdtImages.add(pdtSnap['productImages'][0]);
+                                          pdtPrices.add(pdtSnap['price']);
+                                          pdtIds.add(id);
+                                          widget.total = 0.0;
+                                        });
+                                      }
+
+                                      DocumentSnapshot userData = await FirebaseFirestore.instance
+                                          .collection("users")
+                                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                                          .get();
+                                      DocumentSnapshot supplierData =
+                                          await FirebaseFirestore.instance.collection("users").doc(widget.supplierId).get();
+                                      var orderId = Uuid().v1();
+                                      try {
+                                        await FirebaseFirestore.instance.collection("orders").doc(orderId).set({
+                                          "customerId": FirebaseAuth.instance.currentUser!.uid,
+                                          "customerName": userData['userName'],
+                                          "customerImage": userData['image'],
+                                          "customerEmail": userData['email'],
+                                          "customerAddress": userData["address"],
+                                          "customerPhone": userData['phone'],
+                                          "supplierId": supplierData['uid'],
+                                          "supplierName": supplierData['userName'],
+                                          "supplierImage": supplierData['image'],
+                                          "supplierContact": supplierData['phone'],
+                                          "orderId": orderId,
+                                          "pdtName": FieldValue.arrayUnion(pdtName),
+                                          "pdtImages": FieldValue.arrayUnion(pdtImages),
+                                          "pdtPrice": FieldValue.arrayUnion(pdtPrices),
+                                          "pdtIds": FieldValue.arrayUnion(pdtIds),
+                                          "orderPrice": widget.total,
+                                          "orderStatus": "preparing",
+                                          "deliveryDate": "",
+                                          "orderDate": DateTime.now(),
+                                          'paymentStatus': "cash on delivery",
+                                          "orderReview": false,
+                                          "orderQuantity": pdtQuantity,
+                                        });
+                                        navigateToPageWithPush(context, CustomBottomNavigation());
+                                        await FirebaseFirestore.instance
+                                            .collection("users")
+                                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                                            .update({
+                                          "cart": [],
+                                        });
+                                        QuerySnapshot cartSnap = await FirebaseFirestore.instance
+                                            .collection('mycart')
+                                            .where('userId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                                            .get();
+
+                                        for (var i in cartSnap.docs) {
+                                          i.reference.delete();
+                                        }
+                                        await NotificationServices().sendPushNotification(
+                                          widget.supplierId!,
+                                          'Order Notification',
+                                          'You Received an Order from ${userData['userName']}',
+                                        );
+                                        await NotificationServices().addNotificationInDB(
+                                          supplierId: widget.supplierId!,
+                                          title: 'Your Received a new Order',
+                                        );
+
+                                        setState(() {
+                                          widget.total = 0.0;
+                                          pdtQuantity = 0;
+                                          widget.total = 0.0;
+                                        });
+                                      } catch (e) {
+                                        print(e);
+                                        showCustomMsg(context: context, msg: e.toString());
+                                      }
+                                    },
+                                    title: "Confirm ${widget.total}",
+                                  ),
+                                )
+                              ],
+                            ),
+                          );
+                        });
+                  } else if (_groupValue == 2) {
+                    // makePaymentWithCard(context);
+                    for (var id in widget.pdtIds!) {
+                      QuerySnapshot cartSnap = await FirebaseFirestore.instance
+                          .collection("mycart")
+                          .where("userId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                          .get();
+                      for (var ids in cartSnap.docs) {
+                        pdtQuantity = ids['quantity'];
+                        print(pdtQuantity);
+                      }
+                      DocumentSnapshot pdtSnap = await FirebaseFirestore.instance.collection("products").doc(id).get();
+                      setState(() {
+                        pdtName.add(pdtSnap['pdtName']);
+                        pdtImages.add(pdtSnap['productImages'][0]);
+                        pdtPrices.add(pdtSnap['price']);
+                        pdtIds.add(id);
+                      });
+                    }
+
+                    DocumentSnapshot userData =
+                        await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).get();
+                    DocumentSnapshot supplierData =
+                        await FirebaseFirestore.instance.collection("users").doc(widget.supplierId).get();
+                    String orderId = Uuid().v1();
+                    await makePayment(
+                      orderData: {
+                        "customerId": FirebaseAuth.instance.currentUser!.uid,
+                        "customerName": userData['userName'],
+                        "customerImage": userData['image'],
+                        "customerEmail": userData['email'],
+                        "customerAddress": userData["address"],
+                        "customerPhone": userData['phone'],
+                        "supplierId": supplierData['uid'],
+                        "supplierName": supplierData['userName'],
+                        "supplierImage": supplierData['image'],
+                        "supplierContact": supplierData['phone'],
+                        "orderId": orderId,
+                        "pdtName": FieldValue.arrayUnion(pdtName),
+                        "pdtImages": FieldValue.arrayUnion(pdtImages),
+                        "pdtPrice": FieldValue.arrayUnion(pdtPrices),
+                        "pdtIds": FieldValue.arrayUnion(pdtIds),
+                        "orderPrice": widget.total,
+                        "orderStatus": "preparing",
+                        "deliveryDate": "",
+                        "orderDate": DateTime.now(),
+                        'paymentStatus': "card",
+                        "orderReview": false,
+                        "orderQuantity": pdtQuantity,
+                      },
+                      orderId: orderId,
+                      amount: "10000",
+                    );
+                    setState(() {
+                      widget.total = 0.0;
+                    });
+                  } else {
+                    return null;
+                  }
+                },
+                title: "Confirm ${widget.total} USD",
+              ),
+            ),
+            SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }
