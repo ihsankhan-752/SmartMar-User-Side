@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:smart_mart_user_side/widgets/custom_msg.dart';
 
 import '../../../../../constants/colors.dart';
 import '../../../../../constants/navigations.dart';
@@ -56,15 +57,19 @@ class _BottomCardState extends State<BottomCard> {
                   width: MediaQuery.of(context).size.width - 100,
                   child: PrimaryButton(
                     onTap: () async {
-                      navigateToPageWithPush(
-                        context,
-                        PlaceOrderScreen(
-                          pdtId: pdtIds,
-                          total: total,
-                          supplierId: supplierId,
-                          quantity: quantitiesMap,
-                        ),
-                      );
+                      if (total == 0.0) {
+                        showCustomMsg(context: context, msg: "No Item in Cart found");
+                      } else {
+                        navigateToPageWithPush(
+                          context,
+                          PlaceOrderScreen(
+                            pdtId: pdtIds,
+                            total: total,
+                            supplierId: supplierId,
+                            quantity: quantitiesMap,
+                          ),
+                        );
+                      }
                     },
                     title: "Total: \$ ${total.toStringAsFixed(1)} Go To CheckOut",
                   ),
