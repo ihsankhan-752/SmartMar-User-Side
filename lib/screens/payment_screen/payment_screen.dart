@@ -1,22 +1,12 @@
-import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:smart_mart_user_side/screens/payment_screen/widgets/payment_and_shipment_widget.dart';
 import 'package:smart_mart_user_side/services/order_services.dart';
-import 'package:uuid/uuid.dart';
+import 'package:smart_mart_user_side/services/stripe_services.dart';
 
 import '../../constants/colors.dart';
-import '../../constants/navigations.dart';
 import '../../constants/text_styles.dart';
-import '../../services/stripe_services.dart';
 import '../../widgets/buttons.dart';
-import '../../widgets/custom_msg.dart';
-import '../bottom_nav_bar/custom_bottom_navigation_bar.dart';
 
 class PaymentScreen extends StatefulWidget {
   double? total;
@@ -30,14 +20,8 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  Map<String, dynamic>? paymentIntent;
-
   int _groupValue = 1;
-  List pdtName = [];
-  List pdtImages = [];
-  List pdtPrices = [];
-  List pdtIds = [];
-  int? pdtQuantity;
+
   @override
   Widget build(BuildContext context) {
     double orderTotal = widget.total! - 10.0;
@@ -84,7 +68,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     groupValue: _groupValue,
                     onChanged: (v) {
                       setState(() {
-                        _groupValue = int.parse(v.toString());
+                        _groupValue = v!;
                       });
                     },
                     title: Text(
@@ -162,6 +146,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                         totalPrice: widget.total!,
                                         quantities: widget.quantities,
                                         sellerId: widget.supplierId!,
+                                        paymentStatus: "COD",
                                       );
                                       setState(() {
                                         widget.total = 0.0;
@@ -174,64 +159,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             ),
                           );
                         });
-                  } else if (_groupValue == 2) {
-                    // makePaymentWithCard(context);
-                    for (var id in widget.pdtIds!) {
-                      QuerySnapshot cartSnap = await FirebaseFirestore.instance
-                          .collection("mycart")
-                          .where("userId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-                          .get();
-                      for (var ids in cartSnap.docs) {
-                        pdtQuantity = ids['quantity'];
-                        print(pdtQuantity);
-                      }
-                      DocumentSnapshot pdtSnap = await FirebaseFirestore.instance.collection("products").doc(id).get();
-                      setState(() {
-                        pdtName.add(pdtSnap['pdtName']);
-                        pdtImages.add(pdtSnap['productImages'][0]);
-                        pdtPrices.add(pdtSnap['price']);
-                        pdtIds.add(id);
-                      });
-                    }
-
-                    DocumentSnapshot userData =
-                        await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).get();
-                    DocumentSnapshot supplierData =
-                        await FirebaseFirestore.instance.collection("users").doc(widget.supplierId).get();
-                    String orderId = Uuid().v1();
-                    await makePayment(
-                      orderData: {
-                        "customerId": FirebaseAuth.instance.currentUser!.uid,
-                        "customerName": userData['userName'],
-                        "customerImage": userData['image'],
-                        "customerEmail": userData['email'],
-                        "customerAddress": userData["address"],
-                        "customerPhone": userData['phone'],
-                        "supplierId": supplierData['uid'],
-                        "supplierName": supplierData['userName'],
-                        "supplierImage": supplierData['image'],
-                        "supplierContact": supplierData['phone'],
-                        "orderId": orderId,
-                        "pdtName": FieldValue.arrayUnion(pdtName),
-                        "pdtImages": FieldValue.arrayUnion(pdtImages),
-                        "pdtPrice": FieldValue.arrayUnion(pdtPrices),
-                        "pdtIds": FieldValue.arrayUnion(pdtIds),
-                        "orderPrice": widget.total,
-                        "orderStatus": "preparing",
-                        "deliveryDate": "",
-                        "orderDate": DateTime.now(),
-                        'paymentStatus': "card",
-                        "orderReview": false,
-                        "orderQuantity": pdtQuantity,
-                      },
-                      orderId: orderId,
+                  }
+                  if (_groupValue == 2) {
+                    StripePaymentServices()
+                        .makePayment(
+                      context: context,
+                      pdtIds: widget.pdtIds!,
+                      quantities: widget.quantities,
+                      total: widget.total!,
+                      supplierId: widget.supplierId!,
                       amount: "10000",
-                    );
-                    setState(() {
-                      widget.total = 0.0;
+                    )
+                        .then((value) {
+                      setState(() {
+                        widget.total = 0.0;
+                      });
                     });
-                  } else {
-                    return null;
                   }
                 },
                 title: "Confirm ${widget.total} USD",
@@ -242,66 +185,5 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> makePayment({Map<String, dynamic>? orderData, String? orderId, String? amount}) async {
-    try {
-      paymentIntent = await createPaymentIntent(amount!, 'USD');
-
-      var gpay = PaymentSheetGooglePay(merchantCountryCode: "US", currencyCode: "USD", testEnv: true);
-
-      //STEP 2: Initialize Payment Sheet
-      await Stripe.instance
-          .initPaymentSheet(
-              paymentSheetParameters: SetupPaymentSheetParameters(
-                  paymentIntentClientSecret: paymentIntent!['client_secret'],
-                  style: ThemeMode.dark,
-                  merchantDisplayName: 'Ihsan',
-                  googlePay: gpay))
-          .then((value) async {
-        await FirebaseFirestore.instance.collection("orders").doc(orderId).set(orderData!);
-        await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).update({
-          "cart": [],
-        });
-        setState(() {
-          widget.total = 0.0;
-        });
-      });
-
-      //STEP 3: Display Payment sheet
-      displayPaymentSheet();
-    } catch (err) {
-      print(err);
-    }
-  }
-
-  displayPaymentSheet() async {
-    try {
-      await Stripe.instance.presentPaymentSheet().then((value) {
-        showCustomMsg(context: context, msg: "Transaction Successfully Done!");
-        navigateToPageWithPush(context, CustomBottomNavigation());
-      });
-    } catch (e) {
-      print('$e');
-    }
-  }
-
-//Step 1
-  createPaymentIntent(String amount, String currency) async {
-    try {
-      Map<String, dynamic> body = {
-        'amount': amount,
-        'currency': currency,
-      };
-
-      var response = await http.post(
-        Uri.parse('https://api.stripe.com/v1/payment_intents'),
-        headers: {'Authorization': 'Bearer $stripeSecretKey', 'Content-Type': 'application/x-www-form-urlencoded'},
-        body: body,
-      );
-      return json.decode(response.body);
-    } catch (err) {
-      throw Exception(err.toString());
-    }
   }
 }

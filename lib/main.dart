@@ -8,8 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:smart_mart_user_side/controllers/app_text_controller.dart';
 import 'package:smart_mart_user_side/controllers/image_controller.dart';
 import 'package:smart_mart_user_side/screens/splash/splash_screen.dart';
-import 'package:smart_mart_user_side/services/stripe_services.dart';
 
+import 'constants/keys.dart';
 import 'controllers/cart_controller.dart';
 import 'controllers/loading_controller.dart';
 import 'controllers/user_controller.dart';

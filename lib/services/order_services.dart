@@ -17,6 +17,7 @@ class OrderServices {
     required double totalPrice,
     required List quantities,
     required String sellerId,
+    required String paymentStatus,
   }) async {
     try {
       Provider.of<LoadingController>(context, listen: false).setLoading(true);
@@ -33,7 +34,6 @@ class OrderServices {
         pdtPrices.add(pdtSnap['pdtPrice']);
         pdtIds.add(id);
       }
-      print(pdtNames);
 
       OrderModel orderModel = OrderModel(
         orderId: orderId,
@@ -48,7 +48,7 @@ class OrderServices {
         orderStatus: "preparing",
         deliveryDate: DateTime.now(),
         orderDate: DateTime.now(),
-        paymentStatus: "COD",
+        paymentStatus: paymentStatus,
       );
 
       await FirebaseFirestore.instance.collection('orders').doc(orderId).set(orderModel.toMap());
