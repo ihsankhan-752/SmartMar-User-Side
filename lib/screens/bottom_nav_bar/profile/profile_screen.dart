@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/change_password/change_password_screen.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/edit_profile/edit_profile_screen.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/widgets/profile_listtile_widget.dart';
 
@@ -77,7 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: "Edit Profile",
           ),
           ProfileListTileWidget(
-            onPressed: () {},
+            onPressed: () => navigateToPageWithPush(context, ChangePasswordScreen()),
             icon: Icons.lock_person_outlined,
             title: "Change Password",
           ),

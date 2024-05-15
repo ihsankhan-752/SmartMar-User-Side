@@ -7,6 +7,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_mart_user_side/controllers/app_text_controller.dart';
 import 'package:smart_mart_user_side/controllers/image_controller.dart';
+import 'package:smart_mart_user_side/controllers/visibility_controller.dart';
 import 'package:smart_mart_user_side/screens/splash/splash_screen.dart';
 
 import 'constants/keys.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LoadingController()),
         ChangeNotifierProvider(create: (_) => AppTextController()),
         ChangeNotifierProvider(create: (_) => ImageController()),
+        ChangeNotifierProvider(create: (_) => VisibilityController()),
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,

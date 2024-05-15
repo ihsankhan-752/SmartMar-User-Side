@@ -92,4 +92,52 @@ class AuthServices {
       }
     }
   }
+
+  static Future<bool> checkOldPasswordCreative(email, password) async {
+    AuthCredential authCredential = EmailAuthProvider.credential(email: email, password: password);
+    try {
+      var credentialResult = await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(authCredential);
+      return credentialResult.user != null;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<void> changeUserPasswordCreative({
+    required BuildContext context,
+    required String oldPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    if (oldPassword.isEmpty) {
+      showCustomMsg(context: context, msg: "Old password required");
+    } else if (newPassword.isEmpty) {
+      showCustomMsg(context: context, msg: "New password required");
+    } else if (newPassword != confirmPassword) {
+      showCustomMsg(context: context, msg: "Password does not match");
+    } else {
+      Provider.of<LoadingController>(context, listen: false).setLoading(true);
+      bool checkPassword = true;
+      checkPassword = await checkOldPasswordCreative(
+        FirebaseAuth.instance.currentUser!.email,
+        oldPassword,
+      );
+      if (checkPassword) {
+        try {
+          await FirebaseAuth.instance.currentUser!.updatePassword(newPassword);
+          Provider.of<LoadingController>(context, listen: false).setLoading(false);
+
+          showCustomMsg(context: context, msg: "Password Updated Successfully");
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => LoginScreen()));
+        } catch (e) {
+          Provider.of<LoadingController>(context, listen: false).setLoading(false);
+          showCustomMsg(context: context, msg: e.toString());
+        }
+      } else {
+        Provider.of<LoadingController>(context, listen: false).setLoading(false);
+        showCustomMsg(context: context, msg: "Invalid Password");
+      }
+    }
+  }
 }
