@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/change_password/change_password_screen.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/edit_profile/edit_profile_screen.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/widgets/profile_listtile_widget.dart';
+import 'package:smart_mart_user_side/services/auth_services.dart';
+import 'package:smart_mart_user_side/widgets/alert_dilog.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/navigations.dart';
@@ -83,7 +87,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: "Change Password",
           ),
           ProfileListTileWidget(
-            onPressed: () {},
+            onPressed: () {
+              customAlertDialogBox(
+                  context: context,
+                  title: "Wait",
+                  content: "Are you sure to logout?",
+                  plusBtnClicked: () {
+                    AuthServices.signOut(context);
+                  },
+                  negativeBtnClicked: () {
+                    Get.back();
+                  });
+            },
             icon: Icons.logout,
             title: "LogOut",
           ),
