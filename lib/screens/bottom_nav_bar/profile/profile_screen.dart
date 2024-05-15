@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_mart_user_side/screens/address_screen/add_address_screen.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/edit_profile_screen.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/widgets/profile_listtile_widget.dart';
 
@@ -77,11 +76,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () => navigateToPageWithPush(context, EditProfileScreen()),
             icon: Icons.person,
             title: "Edit Profile",
-          ),
-          ProfileListTileWidget(
-            onPressed: () => navigateToPageWithPush(context, AddAddressScreen()),
-            icon: Icons.location_on_outlined,
-            title: "Add Address",
           ),
           ProfileListTileWidget(
             onPressed: () => navigateToPageWithPush(context, OrderHistory()),

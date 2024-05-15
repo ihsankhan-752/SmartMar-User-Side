@@ -35,9 +35,7 @@ class AuthServices {
           uid: FirebaseAuth.instance.currentUser!.uid,
           email: email,
           username: username,
-          country: "",
-          state: "",
-          city: "",
+          address: "",
           phone: contact,
         );
         await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).set(userModel.toMap());

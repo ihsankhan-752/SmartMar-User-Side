@@ -43,16 +43,12 @@ class UserProfileServices {
 
   static updateUserAddress({
     required BuildContext context,
-    String? country,
-    String? state,
-    String? city,
+    String? address,
   }) async {
     try {
       Provider.of<LoadingController>(context, listen: false).setLoading(true);
       await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).update({
-        'country': country,
-        'state': state,
-        'city': city,
+        'address': address,
       });
       Provider.of<LoadingController>(context, listen: false).setLoading(false);
       Get.back();

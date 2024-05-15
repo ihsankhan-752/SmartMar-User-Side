@@ -4,9 +4,7 @@ class UserModel {
   String? uid;
   String? username;
   String? email;
-  String? country;
-  String? state;
-  String? city;
+  String? address;
   int? phone;
   String? image;
   List? cart;
@@ -16,9 +14,7 @@ class UserModel {
     this.uid,
     this.email,
     this.username,
-    this.country,
-    this.state,
-    this.city,
+    this.address,
     this.phone,
     this.image,
     this.cart,
@@ -30,9 +26,7 @@ class UserModel {
       uid: snap['uid'],
       email: snap['email'],
       username: snap['userName'],
-      country: snap['country'],
-      state: snap['state'],
-      city: snap['city'],
+      address: snap['address'],
       phone: snap['phone'],
       image: snap['image'],
       cart: snap['cart'],
@@ -44,9 +38,7 @@ class UserModel {
       "uid": uid,
       "userName": username,
       "email": email,
-      "country": country,
-      "state": state,
-      "city": city,
+      "address": address,
       "phone": phone,
       "image": "",
       "cart": [],
