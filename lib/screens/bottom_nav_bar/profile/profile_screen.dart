@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/edit_profile_screen.dart';
+import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/edit_profile/edit_profile_screen.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/widgets/profile_listtile_widget.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/navigations.dart';
 import '../../../constants/text_styles.dart';
 import '../../../controllers/user_controller.dart';
-import 'order_history.dart';
+import 'my_orders/my_orders.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -36,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 userController.userModel!.image == ""
                     ? CircleAvatar(
                         radius: 30,
-                        backgroundColor: AppColors.mainColor.withOpacity(0.5),
+                        backgroundColor: AppColors.mainColor,
                         child: Center(
                           child: Icon(Icons.person, color: AppColors.primaryWhite),
                         ),
@@ -68,9 +67,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Divider(color: AppColors.mainColor, thickness: 1.5),
           SizedBox(height: 20),
           ProfileListTileWidget(
-            onPressed: () => navigateToPageWithPush(context, OrderHistory()),
-            icon: FontAwesomeIcons.clockRotateLeft,
-            title: "Order History",
+            onPressed: () => navigateToPageWithPush(context, MyOrders()),
+            icon: Icons.note_alt,
+            title: "My Orders",
           ),
           ProfileListTileWidget(
             onPressed: () => navigateToPageWithPush(context, EditProfileScreen()),
@@ -78,12 +77,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: "Edit Profile",
           ),
           ProfileListTileWidget(
-            onPressed: () => navigateToPageWithPush(context, OrderHistory()),
+            onPressed: () {},
             icon: Icons.lock_person_outlined,
             title: "Change Password",
           ),
           ProfileListTileWidget(
-            onPressed: () => navigateToPageWithPush(context, OrderHistory()),
+            onPressed: () {},
             icon: Icons.logout,
             title: "LogOut",
           ),

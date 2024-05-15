@@ -25,10 +25,10 @@ class ProfileListTileWidget extends StatelessWidget {
               width: 35,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(05),
-                color: AppColors.mainColor.withOpacity(0.5),
+                color: AppColors.mainColor,
               ),
               child: Center(
-                child: Icon(icon!, size: 18, color: AppColors.primaryWhite),
+                child: Icon(icon!, size: 18, color: AppColors.primaryColor),
               ),
             ),
             title: Text(

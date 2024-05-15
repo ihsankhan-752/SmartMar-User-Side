@@ -11,7 +11,7 @@ import 'package:smart_mart_user_side/services/user_profile_services.dart';
 import 'package:smart_mart_user_side/widgets/buttons.dart';
 import 'package:smart_mart_user_side/widgets/custom_text_fields.dart';
 
-import '../../../constants/colors.dart';
+import '../../../../constants/colors.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
