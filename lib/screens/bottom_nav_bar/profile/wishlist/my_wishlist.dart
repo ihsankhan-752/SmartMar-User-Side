@@ -3,13 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
-import 'package:smart_mart_user_side/screens/bottom_nav_bar/wishlist/widgets/no_pdt_found_widget.dart';
-import 'package:smart_mart_user_side/screens/bottom_nav_bar/wishlist/widgets/wishlist_card_widget.dart';
+import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/wishlist/widgets/no_pdt_found_widget.dart';
+import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/wishlist/widgets/wishlist_card_widget.dart';
 
-import '../../../constants/colors.dart';
-import '../../../constants/text_styles.dart';
-import '../../../controllers/user_controller.dart';
-import '../../../models/pdt_model.dart';
+import '../../../../constants/colors.dart';
+import '../../../../constants/text_styles.dart';
+import '../../../../controllers/user_controller.dart';
+import '../../../../models/pdt_model.dart';
 
 class MyWishListScreen extends StatelessWidget {
   const MyWishListScreen({

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../constants/colors.dart';
-import '../../../../constants/text_styles.dart';
+import '../../../../../constants/colors.dart';
+import '../../../../../constants/text_styles.dart';
 
 class NoProductFoundInWishlistWidget extends StatelessWidget {
   const NoProductFoundInWishlistWidget({super.key});

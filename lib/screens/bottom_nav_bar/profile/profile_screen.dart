@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/change_password/change_password_screen.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/edit_profile/edit_profile_screen.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/widgets/profile_listtile_widget.dart';
+import 'package:smart_mart_user_side/screens/bottom_nav_bar/profile/wishlist/my_wishlist.dart';
 import 'package:smart_mart_user_side/services/auth_services.dart';
 import 'package:smart_mart_user_side/widgets/alert_dilog.dart';
 
@@ -75,6 +76,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () => navigateToPageWithPush(context, MyOrders()),
             icon: Icons.note_alt,
             title: "My Orders",
+          ),
+          ProfileListTileWidget(
+            onPressed: () => navigateToPageWithPush(context, MyWishListScreen()),
+            icon: Icons.favorite_border,
+            title: "Wishlist",
           ),
           ProfileListTileWidget(
             onPressed: () => navigateToPageWithPush(context, EditProfileScreen()),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../constants/colors.dart';
-import '../../../../constants/text_styles.dart';
-import '../../../../controllers/user_controller.dart';
-import '../../../../models/pdt_model.dart';
+import '../../../../../constants/colors.dart';
+import '../../../../../constants/text_styles.dart';
+import '../../../../../controllers/user_controller.dart';
+import '../../../../../models/pdt_model.dart';
 import 'cart_status_widget.dart';
 
 class WishlistCardWidget extends StatelessWidget {

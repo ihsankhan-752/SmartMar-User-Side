@@ -3,8 +3,8 @@ import 'package:smart_mart_user_side/constants/colors.dart';
 import 'package:smart_mart_user_side/constants/text_styles.dart';
 import 'package:smart_mart_user_side/services/cart_services.dart';
 
-import '../../../../controllers/user_controller.dart';
-import '../../../../models/pdt_model.dart';
+import '../../../../../controllers/user_controller.dart';
+import '../../../../../models/pdt_model.dart';
 
 class CartStatusWidget extends StatelessWidget {
   final UserController userController;

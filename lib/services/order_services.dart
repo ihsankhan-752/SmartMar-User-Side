@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_mart_user_side/controllers/loading_controller.dart';
+import 'package:smart_mart_user_side/models/notification_model.dart';
 import 'package:smart_mart_user_side/models/order_model.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/custom_bottom_navigation_bar.dart';
 import 'package:smart_mart_user_side/services/notification_services.dart';
@@ -22,6 +23,9 @@ class OrderServices {
   }) async {
     try {
       Provider.of<LoadingController>(context, listen: false).setLoading(true);
+
+      DocumentSnapshot userSnap =
+          await await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get();
       var orderId = Uuid().v1();
 
       List pdtNames = [];
@@ -72,7 +76,14 @@ class OrderServices {
         'Order Notification',
         "You have receive an order notification",
       );
-      await FirebaseFirestore.instance.collection('notifications').add({});
+      NotificationModel notificationModel = NotificationModel(
+        fromUserId: FirebaseAuth.instance.currentUser!.uid,
+        toUserId: sellerId,
+        title: "Order Updates",
+        body: "You have got a new order from ${userSnap['userName']}",
+        createdAt: DateTime.now(),
+      );
+      await FirebaseFirestore.instance.collection('notifications').add(notificationModel.toMap());
       Provider.of<LoadingController>(context, listen: false).setLoading(false);
       Get.to(() => CustomBottomNavigation());
     } on FirebaseException catch (e) {

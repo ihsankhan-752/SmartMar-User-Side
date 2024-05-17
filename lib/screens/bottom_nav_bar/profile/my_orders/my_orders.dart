@@ -84,7 +84,7 @@ class _MyOrdersState extends State<MyOrders> {
                 } else if (snapshot.data!.docs.isEmpty) {
                   return Center(
                     child: Text(
-                      "Sorry ! No Active Order Found",
+                      "Sorry ! No Order Found",
                       style: AppTextStyles.APPBAR_HEADING_STYLE.copyWith(
                         fontSize: 18,
                         color: Colors.blueGrey,
@@ -183,7 +183,7 @@ class _MyOrdersState extends State<MyOrders> {
       orderStatus = 'preparing';
     }
     if (_currentIndex == 1) {
-      orderStatus = 'complete';
+      orderStatus = 'deliver';
     }
     return orderStatus;
   }

@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
+import 'package:get/get.dart';
 import 'package:smart_mart_user_side/models/pdt_model.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/pdt_detail_widgets/bottom_portion.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/pdt_detail_widgets/product_information_widget.dart';
+import 'package:smart_mart_user_side/screens/chat/chat_screen.dart';
 import 'package:smart_mart_user_side/services/wishlist_services.dart';
 
 import '../../../constants/colors.dart';
@@ -25,6 +27,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 60),
+        child: FloatingActionButton(
+          backgroundColor: AppColors.mainColor,
+          shape: CircleBorder(),
+          onPressed: () {
+            Get.to(() => ChatScreen(supplierId: widget.productModel.sellerId));
+          },
+          child: Icon(Icons.chat, color: AppColors.primaryWhite),
+        ),
+      ),
       appBar: AppBar(
         automaticallyImplyLeading: true,
         centerTitle: true,

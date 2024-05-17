@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_mart_user_side/constants/lists.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/get_product_by_category.dart';
-import 'package:smart_mart_user_side/screens/bottom_nav_bar/wishlist/my_wishlist.dart';
+import 'package:smart_mart_user_side/screens/chat/user_list_screen.dart';
 
 import '../../../constants/colors.dart';
 import '../../../constants/navigations.dart';
@@ -37,9 +37,13 @@ class _HomeScreenState extends State<HomeScreen> {
           actions: [
             InkWell(
               onTap: () {
-                navigateToPageWithPush(context, MyWishListScreen());
+                navigateToPageWithPush(context, UserListScreen());
               },
-              child: Icon(Icons.favorite_border, color: AppColors.primaryBlack),
+              child: SizedBox(
+                height: 25,
+                width: 25,
+                child: Image.asset('assets/images/chat.png', fit: BoxFit.cover),
+              ),
             ),
             SizedBox(width: 15),
           ],
