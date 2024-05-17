@@ -54,6 +54,7 @@ class OrderServices {
         deliveryDate: DateTime.now(),
         orderDate: DateTime.now(),
         paymentStatus: paymentStatus,
+        isRated: false,
       );
 
       await FirebaseFirestore.instance.collection('orders').doc(orderId).set(orderModel.toMap());

@@ -17,6 +17,8 @@ class OrderModel {
   DateTime? orderDate;
   String? paymentStatus;
 
+  bool? isRated;
+
   OrderModel({
     this.orderId,
     this.sellerId,
@@ -31,6 +33,7 @@ class OrderModel {
     this.deliveryDate,
     this.orderDate,
     this.paymentStatus,
+    this.isRated,
   });
 
   Map<String, dynamic> toMap() {
@@ -48,6 +51,7 @@ class OrderModel {
       'deliveryDate': this.deliveryDate,
       'orderDate': this.orderDate,
       'paymentStatus': this.paymentStatus,
+      'isRated': isRated,
     };
   }
 
@@ -66,6 +70,7 @@ class OrderModel {
       deliveryDate: (map['deliveryDate'].toDate()),
       orderDate: (map['orderDate'].toDate()),
       paymentStatus: map['paymentStatus'] as String,
+      isRated: map['isRated'] as bool,
     );
   }
 }
