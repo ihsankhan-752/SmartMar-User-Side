@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:smart_mart_user_side/controllers/loading_controller.dart';
 import 'package:smart_mart_user_side/models/order_model.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/custom_bottom_navigation_bar.dart';
+import 'package:smart_mart_user_side/services/notification_services.dart';
 import 'package:smart_mart_user_side/widgets/custom_msg.dart';
 import 'package:uuid/uuid.dart';
 
@@ -65,6 +66,13 @@ class OrderServices {
       for (var i in cartSnap.docs) {
         i.reference.delete();
       }
+
+      await NotificationServices().sendPushNotification(
+        sellerId,
+        'Order Notification',
+        "You have receive an order notification",
+      );
+      await FirebaseFirestore.instance.collection('notifications').add({});
       Provider.of<LoadingController>(context, listen: false).setLoading(false);
       Get.to(() => CustomBottomNavigation());
     } on FirebaseException catch (e) {

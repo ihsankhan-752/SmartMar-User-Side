@@ -13,7 +13,9 @@ class GetProductByCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance.collection("products").where("category", isEqualTo: category).snapshots(),
+      stream: category == "All"
+          ? FirebaseFirestore.instance.collection("products").snapshots()
+          : FirebaseFirestore.instance.collection("products").where("category", isEqualTo: category).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -34,16 +36,16 @@ class GetProductByCategory extends StatelessWidget {
             ),
           );
         }
-        return GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: snapshot.data!.docs.length,
-          itemBuilder: (context, index) {
-            ProductModel productModel = ProductModel.fromMap(snapshot.data!.docs[index]);
+        return Expanded(
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              ProductModel productModel = ProductModel.fromMap(snapshot.data!.docs[index]);
 
-            return ProductCard(productModel: productModel);
-          },
+              return ProductCard(productModel: productModel);
+            },
+          ),
         );
       },
     );

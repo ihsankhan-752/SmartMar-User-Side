@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_mart_user_side/models/pdt_model.dart';
 import 'package:smart_mart_user_side/screens/bottom_nav_bar/home/widgets/product_card.dart';
-import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
-import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
 import '../../../../constants/colors.dart';
 
@@ -36,17 +34,19 @@ class ALlCategories extends StatelessWidget {
               ),
             );
           }
-          return StaggeredGridView.countBuilder(
-            shrinkWrap: true,
-            itemCount: snapshot.data!.docs.length,
-            crossAxisCount: 2,
-            itemBuilder: (context, index) {
-              ProductModel productModel = ProductModel.fromMap(snapshot.data!.docs[index]);
-              return ProductCard(
-                productModel: productModel,
-              );
-            },
-            staggeredTileBuilder: (context) => StaggeredTile.fit(1),
+          return Expanded(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+              ),
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                ProductModel productModel = ProductModel.fromMap(snapshot.data!.docs[index]);
+                return ProductCard(
+                  productModel: productModel,
+                );
+              },
+            ),
           );
         },
       ),
