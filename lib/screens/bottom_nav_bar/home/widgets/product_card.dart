@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../constants/colors.dart';
 import '../../../../constants/navigations.dart';
+import '../../../../constants/rating_ftn.dart';
 import '../../../../models/pdt_model.dart';
 import '../product_detail_screen.dart';
 
@@ -45,14 +45,14 @@ class _ProductModelState extends State<ProductCard> {
                   fit: BoxFit.cover,
                 ),
               ),
-              child: StreamBuilder<double>(
+              child: StreamBuilder<RatingInfo>(
                 stream: getAverageRatingStream(widget.productModel.pdtId!),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return SizedBox();
                   }
 
-                  avg = snapshot.data ?? 0.0;
+                  avg = snapshot.data?.averageRating ?? 0.0;
 
                   return avg == 0.0
                       ? SizedBox()
@@ -117,16 +117,5 @@ class _ProductModelState extends State<ProductCard> {
         ),
       ),
     );
-  }
-
-  Stream<double> getAverageRatingStream(String docId) {
-    return FirebaseFirestore.instance.collection('products').doc(docId).collection('reviews').snapshots().map((snap) {
-      double sum = 0.0;
-      int count = snap.size;
-      for (var rating in snap.docs) {
-        sum += rating['rating'];
-      }
-      return count != 0 ? sum / count : 0;
-    });
   }
 }
