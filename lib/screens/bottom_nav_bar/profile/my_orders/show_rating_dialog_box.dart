@@ -47,7 +47,7 @@ class ShowRatingDialogBox extends StatelessWidget {
               orderId: orderId,
               productId: productId,
               comment: response.comment,
-              rating: response.rating.toInt());
+              rating: response.rating.toDouble());
         },
       );
     });

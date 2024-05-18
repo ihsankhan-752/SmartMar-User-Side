@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RatingModel {
   String? comment;
-  int? rating;
+  double? rating;
   String? userId;
   String? userName;
   String? userImage;
@@ -31,7 +31,7 @@ class RatingModel {
   factory RatingModel.fromMap(DocumentSnapshot map) {
     return RatingModel(
       comment: map['comment'] as String,
-      rating: map['rating'] as int,
+      rating: map['rating'] as double,
       userId: map['userId'] as String,
       userName: map['userName'] as String,
       userImage: map['userImage'] as String,

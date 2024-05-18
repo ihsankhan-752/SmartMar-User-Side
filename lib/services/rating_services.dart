@@ -15,7 +15,7 @@ class RatingServices {
     required String orderId,
     required String productId,
     required String comment,
-    required int rating,
+    required double rating,
   }) async {
     if (comment.isEmpty) {
       showCustomMsg(context: context, msg: "Write Something");

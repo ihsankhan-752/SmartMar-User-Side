@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,6 +17,8 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductModelState extends State<ProductCard> {
+  double avg = 0.0;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -42,34 +45,47 @@ class _ProductModelState extends State<ProductCard> {
                   fit: BoxFit.cover,
                 ),
               ),
-              child: Align(
-                alignment: Alignment.bottomLeft,
-                child: Container(
-                  margin: EdgeInsets.only(left: 5, bottom: 3),
-                  height: 25,
-                  width: 50,
-                  decoration: BoxDecoration(
-                    color: AppColors.mainColor.withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
-                    child: Row(
-                      children: [
-                        Icon(Icons.grade, color: Colors.amber, size: 12),
-                        SizedBox(width: 2),
-                        Text(
-                          '4.9',
-                          style: TextStyle(
-                            color: AppColors.primaryWhite,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+              child: StreamBuilder<double>(
+                stream: getAverageRatingStream(widget.productModel.pdtId!),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return SizedBox();
+                  }
+
+                  avg = snapshot.data ?? 0.0;
+
+                  return avg == 0.0
+                      ? SizedBox()
+                      : Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Container(
+                            margin: EdgeInsets.only(left: 5, bottom: 3),
+                            height: 25,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              color: AppColors.mainColor.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.grade, color: Colors.amber, size: 12),
+                                  SizedBox(width: 2),
+                                  Text(
+                                    avg.toStringAsFixed(1),
+                                    style: TextStyle(
+                                      color: AppColors.primaryWhite,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                        );
+                },
               ),
             ),
             Padding(
@@ -96,10 +112,21 @@ class _ProductModelState extends State<ProductCard> {
                 ],
               ),
             ),
-            SizedBox(height: 05),
+            SizedBox(height: 5),
           ],
         ),
       ),
     );
+  }
+
+  Stream<double> getAverageRatingStream(String docId) {
+    return FirebaseFirestore.instance.collection('products').doc(docId).collection('reviews').snapshots().map((snap) {
+      double sum = 0.0;
+      int count = snap.size;
+      for (var rating in snap.docs) {
+        sum += rating['rating'];
+      }
+      return count != 0 ? sum / count : 0;
+    });
   }
 }
