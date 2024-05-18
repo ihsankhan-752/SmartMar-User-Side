@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:paymob_pakistan/paymob_payment.dart';
 import 'package:smart_mart_user_side/screens/payment_screen/widgets/payment_and_shipment_widget.dart';
 import 'package:smart_mart_user_side/services/order_services.dart';
 import 'package:smart_mart_user_side/services/stripe_services.dart';
@@ -21,6 +22,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   int _groupValue = 1;
+  PaymobResponse? response;
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +104,26 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ],
                     ),
                   ),
+                  RadioListTile(
+                    activeColor: AppColors.primaryColor,
+                    value: 3,
+                    groupValue: _groupValue,
+                    onChanged: (v) {
+                      setState(() {
+                        _groupValue = int.parse(v.toString());
+                      });
+                    },
+                    title: Text(
+                      "Pay via Paymbob",
+                      style: AppTextStyles().H2.copyWith(fontSize: 16),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 20, width: 80, child: Image.network('https://paymob.pk/images/paymobLogo.png')),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -176,6 +198,48 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       });
                     });
                   }
+                  //
+                  // if (_groupValue == 3) {
+                  //   try {
+                  //     PaymentInitializationResult response = await PaymobPakistan.instance.initializePayment(
+                  //       currency: "PKR",
+                  //       amountInCents: "100",
+                  //     );
+                  //
+                  //     String authToken = response.authToken;
+                  //     int orderID = response.orderID;
+                  //
+                  //     PaymobPakistan.instance.makePayment(
+                  //       context,
+                  //       currency: "PKR",
+                  //       amountInCents: "100",
+                  //       paymentType: PaymentType.card,
+                  //       authToken: authToken,
+                  //       orderID: orderID,
+                  //       onPayment: (response) {
+                  //         setState(() {
+                  //           this.response = response;
+                  //         });
+                  //
+                  //         OrderServices().makeOrder(
+                  //           context: context,
+                  //           productIds: widget.pdtIds!,
+                  //           totalPrice: widget.total!,
+                  //           quantities: widget.quantities,
+                  //           sellerId: widget.supplierId!,
+                  //           paymentStatus: "Card",
+                  //         );
+                  //         setState(() {
+                  //           widget.total = 0.0;
+                  //         });
+                  //
+                  //         Navigator.pop(context);
+                  //       },
+                  //     );
+                  //   } catch (err) {
+                  //     rethrow;
+                  //   }
+                  // }
                 },
                 title: "Confirm ${widget.total} USD",
               ),

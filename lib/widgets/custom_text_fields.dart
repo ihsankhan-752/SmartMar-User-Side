@@ -85,11 +85,14 @@ class AuthTextInput extends StatelessWidget {
 class SearchTextInput extends StatelessWidget {
   final TextEditingController? controller;
   final String? hintText;
-  const SearchTextInput({Key? key, this.controller, this.hintText}) : super(key: key);
+  final Function(String? v)? onChange;
+  final Function()? onCrossIconClick;
+  const SearchTextInput({Key? key, this.controller, this.hintText, this.onChange, this.onCrossIconClick}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onChanged: onChange,
       controller: controller,
       decoration: InputDecoration(
         isDense: true,
@@ -108,6 +111,8 @@ class SearchTextInput extends StatelessWidget {
           ),
         ),
         hintText: hintText,
+        suffixIcon:
+            controller!.text.isEmpty ? SizedBox() : GestureDetector(onTap: onCrossIconClick ?? () {}, child: Icon(Icons.close)),
         hintStyle: GoogleFonts.nunito(fontSize: 14.5, color: Color(0xff2b2b2b).withOpacity(0.8)),
       ),
     );

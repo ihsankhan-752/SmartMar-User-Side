@@ -39,7 +39,10 @@ class _CustomBottomNavigationState extends State<CustomBottomNavigation> {
       child: Scaffold(
         body: Pages[_currentIndex],
         bottomNavigationBar: Container(
-          color: AppColors.mainColor.withOpacity(0.2),
+          decoration: BoxDecoration(
+              border: Border(
+            top: BorderSide(color: AppColors.grey.withOpacity(0.5)),
+          )),
           height: 60,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -70,6 +70,8 @@ dependencies:
   csc_picker: ^0.2.7
   country_state_city_pro: ^0.0.6
   rating_dialog: ^2.0.4
+  dio: ^5.4.3+1
+  paymob_pakistan: ^1.0.7
 
 dev_dependencies:
   flutter_test:

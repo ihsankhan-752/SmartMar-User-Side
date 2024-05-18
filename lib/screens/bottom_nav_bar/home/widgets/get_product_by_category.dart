@@ -8,7 +8,8 @@ import '../../../../constants/colors.dart';
 
 class GetProductByCategory extends StatelessWidget {
   final String category;
-  const GetProductByCategory({Key? key, required this.category}) : super(key: key);
+  final String searchText;
+  const GetProductByCategory({Key? key, required this.category, required this.searchText}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,16 +37,37 @@ class GetProductByCategory extends StatelessWidget {
             ),
           );
         }
-        return Expanded(
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              ProductModel productModel = ProductModel.fromMap(snapshot.data!.docs[index]);
 
-              return ProductCard(productModel: productModel);
-            },
-          ),
+        List<DocumentSnapshot> filteredDocs = snapshot.data!.docs.where((doc) {
+          ProductModel productModel = ProductModel.fromMap(doc);
+          return searchText.isEmpty || productModel.pdtName!.toLowerCase().contains(searchText.toLowerCase());
+        }).toList();
+
+        if (filteredDocs.isEmpty) {
+          return Padding(
+            padding: EdgeInsets.only(top: 180),
+            child: Center(
+              child: Text(
+                "No Data Found!!",
+                style: GoogleFonts.poppins(
+                  color: AppColors.mainColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                ),
+              ),
+            ),
+          );
+        }
+
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+          itemCount: filteredDocs.length,
+          itemBuilder: (context, index) {
+            ProductModel productModel = ProductModel.fromMap(filteredDocs[index]);
+            return ProductCard(productModel: productModel);
+          },
         );
       },
     );

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:paymob_pakistan/paymob_payment.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_mart_user_side/controllers/app_text_controller.dart';
 import 'package:smart_mart_user_side/controllers/image_controller.dart';
@@ -25,6 +26,13 @@ void main() async {
   Stripe.urlScheme = 'flutterstripe';
   await Stripe.instance.applySettings();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  PaymobPakistan.instance.initialize(
+    apiKey: paymobKey,
+    integrationID: 169470,
+    iFrameID: 178836,
+    jazzcashIntegrationId: 123456,
+    easypaisaIntegrationID: 123456,
+  );
 
   runApp(MyApp());
 }

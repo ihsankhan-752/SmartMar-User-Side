@@ -16,8 +16,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  TextEditingController _searchController = TextEditingController();
   int currentIndex = 0;
   String _selectedValue = 'All';
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -49,77 +51,34 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         extendBody: true,
-        body: Padding(
+        body: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.sizeOf(context).width * 0.75,
-                    height: 55,
-                    child: SearchTextInput(controller: TextEditingController(), hintText: "Search"),
-                  ),
-                  Container(
-                    height: 45,
-                    width: 55,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppColors.primaryColor,
-                    ),
-                    child: PopupMenuButton(
-                      icon: SizedBox(
-                        height: 40,
-                        width: 30,
-                        child: Image.asset('assets/images/png/filter.png', color: AppColors.primaryWhite),
-                      ),
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem(
-                            value: 'all',
-                            child: Text("All"),
-                            onTap: () {
-                              setState(() {
-                                _selectedValue = 'All';
-                              });
-                            },
-                          ),
-                          PopupMenuItem(
-                            value: 'men',
-                            child: Text("Men"),
-                            onTap: () {
-                              setState(() {
-                                _selectedValue = 'Men';
-                              });
-                            },
-                          ),
-                          PopupMenuItem(
-                            value: 'women',
-                            child: Text("Women"),
-                            onTap: () {
-                              setState(() {
-                                _selectedValue = 'Women';
-                              });
-                            },
-                          ),
-                          PopupMenuItem(
-                            value: 'Kids',
-                            child: Text("Kids"),
-                            onTap: () {
-                              setState(() {
-                                _selectedValue = 'Kids';
-                              });
-                            },
-                          ),
-                        ];
-                      },
-                    ),
-                  ),
-                ],
+              SizedBox(
+                width: MediaQuery.sizeOf(context).width,
+                height: 55,
+                child: SearchTextInput(
+                  controller: _searchController,
+                  onCrossIconClick: () {
+                    _searchController.clear();
+                    setState(() {});
+                  },
+                  hintText: "Search",
+                  onChange: (v) {
+                    setState(() {});
+                  },
+                ),
               ),
+              SizedBox(height: 10),
+              SizedBox(
+                width: MediaQuery.sizeOf(context).width,
+                height: 120,
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10), child: Image.asset('assets/images/adv.png', fit: BoxFit.cover)),
+              ),
+              SizedBox(height: 10),
               SizedBox(height: 20),
               SizedBox(
                 height: 35,
@@ -128,8 +87,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: categories.map((e) {
                     return GestureDetector(
                       onTap: () {
-                        _selectedValue = e;
-                        setState(() {});
+                        setState(() {
+                          _selectedValue = e;
+                        });
                       },
                       child: Container(
                         decoration: BoxDecoration(
@@ -154,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(height: 15),
-              GetProductByCategory(category: _selectedValue)
+              GetProductByCategory(category: _selectedValue, searchText: _searchController.text)
             ],
           ),
         ),
